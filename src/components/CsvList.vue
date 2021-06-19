@@ -198,15 +198,6 @@ export default {
             params.append('keyword', this.keyword);
             let order = this.order !== '' ? this.order + ' ' + this.orderOption : '';
             params.append('order', order);
-            // axios.post('./searchList', params)
-            //     .then(res => {
-            //         if(res.status !== 200) {
-            //             console.log(res.data);
-            //         } else {
-            //             this.list = res.data
-            //         }
-            //     })
-            //     .catch(errors => console.log(errors))
             fetch('http://localhost:8888/axiz-php/searchList', {
                 method: 'post',
                 body: params
@@ -221,7 +212,6 @@ export default {
 
         },
         register(type) {
-            //vueでバインドされた値はmethodの中ではthisで取得できる
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('type', type);
@@ -231,15 +221,6 @@ export default {
                 }
             })
             params.append('account_id', this.accountId);
-            // axios.post('./updateRecord', params)
-            //     .then(res => {
-            //         if(res.status !== 200) {
-            //             console.log(res.data);
-            //         } else {
-            //             this.search();
-            //         }
-            //     })
-            //     .catch(errors => console.log(errors));
             fetch('http://localhost:8888/axiz-php/updateRecord', {
                 method:'post',
                 body:params
@@ -271,9 +252,6 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('id', this.form.id);
-            // axios.post('./deleteById', params)
-            //     .then(res => this.search())
-            //     .catch(errors => console.log(errors))
             fetch('http://localhost:8888/deleteById', {
                 method:'post',
                 body:params
@@ -290,9 +268,6 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('idList', this.idList);
-            // axios.post('./bulkDelete', params)
-            //     .then(res => this.search())
-            //     .catch(errors => console.log(errors))
             fetch('http://localhost:8888/axiz-php/bulkDelete', {
                 method:'post',
                 body:params
@@ -360,11 +335,6 @@ export default {
         getCategoryList() {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
-            // axios.post('./getCategoryList', params)
-            // .then(res => {
-            //    this.categoryList = res.data;
-            // })
-            // .catch(error => console.log(error))
             fetch('http://localhost:8888/axiz-php/getCategoryList', {
                 method:'post',
                 body:params
@@ -377,16 +347,6 @@ export default {
         this.search();
         let params = new URLSearchParams();
         params.append('tableName', this.tableName);
-        // axios.post('./getColumnList', params)
-        // .then(res => {
-        //     this.columnList = res.data;
-        //     res.data.forEach(element => {
-        //         if(element['column_name'] !== 'account_name') {
-        //             this.form[element['column_name']] = '';
-        //         }
-        //     })
-        // })
-        // .catch(errors => console.log(errors))
         fetch('http://localhost:8888/axiz-php/getColumnList', {
             method:'post',
             body: params
@@ -402,6 +362,29 @@ export default {
             })
         )
         .catch(errors => console.log(errors))
+    },
+    watch: {
+        $route() {
+        // ルートの変更の検知...
+        this.search();
+        let params = new URLSearchParams();
+        params.append('tableName', this.tableName);
+        fetch('http://localhost:8888/axiz-php/getColumnList', {
+            method:'post',
+            body: params
+        })
+        .then(res => res.json()
+            .then(json => {
+                this.columnList = json;
+                json.forEach(element => {
+                    if(element['column_name'] !== 'account_name') {
+                        this.form[element['column_name']] = '';
+                    }
+                })
+            })
+        )
+        .catch(errors => console.log(errors))
+        }
     }
 }
 </script>

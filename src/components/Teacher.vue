@@ -7,10 +7,10 @@
             <div>
                 
             </div>
+            
         </header>
 
         <div id="app" v-cloak>
-
             <ul class="nav">
                 <li class="nav-item">
                     <a class="nav-link active" id="document-tab" data-toggle="tab" href="#document">資料</a>
@@ -18,11 +18,6 @@
                 <li class="nav-item">
                     <a class="nav-link" id="text-disp-tab" data-toggle="tab" href="#text-disp">教材管理</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" id="answer-tab" data-toggle="tab" href="#answer" role="tab" aria-controls="profile" aria-selected="false">
-                        模範解答
-                    </a>
-                </li> -->
                 <li class="nav-item">
                     <a class="nav-link" id="answer-tab2" href="#answer2">
                         模範解答
@@ -30,10 +25,7 @@
                 </li>
 
                 <li v-for="(table, index) in tableList" v-bind:key="'table-'+index" class="nav-item">
-                    <!-- <a class="nav-link" v-bind:id="table.table_name+'-tab'" v-bind:href="'#'+table.table_name">
-                        {{ table.table_comment }}
-                    </a> -->
-                    <router-link v-bind:to="table.table_name">{{ table.table_comment }}</router-link>
+                    <router-link v-bind:to="'/teacher/' + table.table_name">{{ table.table_comment }}</router-link>
                 </li>
 
                 <li v-for="(calendar, index) in calendarList" v-bind:key="'calendar'+index" class="nav-item">
@@ -41,11 +33,14 @@
                         {{ calendar.table_comment }}
                     </a>
                 </li>
-                <li>
-                    <router-link to="/teacher/csvlist/qa">QA
-                    </router-link>
-                </li>
+                <!-- <li>
+                    <router-link to="/teacher/qa">QA</router-link>
+                    <router-link to="/teacher/feedback">Feedback</router-link>
+                </li> -->
             </ul>
+            <main>
+                <router-view></router-view>
+            </main>
 
             <!-- <div class="tab-content">
                 <div class="tab-pane fade show active" id="document" role="tabpanel" aria-labelledby="document-tab">
@@ -147,9 +142,7 @@
 
                     </details>
                 </div> -->
-                <main>
-                    <router-view></router-view>
-                </main>
+                
             
                 <!-- 教材管理 -->
                 <!-- <div class="tab-pane fade " id="text-disp" role="tabpanel" aria-labelledby="text-disp-tab">
@@ -189,8 +182,6 @@ export default {
             let params = new URLSearchParams();
             params.append('account_level', 2);
             params.append('type', 1); // マスタ
-            // axios.post('./getUseTableList', params)
-            // .then(res => this.tableList = res.data);
             fetch('http://localhost:8888/axiz-php/getUseTableList', {
                 method: 'post',
                 body: params,
@@ -202,8 +193,6 @@ export default {
             params = new URLSearchParams();
             params.append('account_level', 2);
             params.append('type', 2); // カレンダー
-            // axios.post('./getUseTableList', params)
-            //  .then(res => this.calendarList = res.data);
             fetch('http://localhost:8888/axiz-php/getUseTableList', {
                 method: 'post',
                 body: params,
@@ -215,7 +204,7 @@ export default {
     },
     created: function() {
         this.getUseTableList();
-    }
+    },    
 }
 </script>
 <style>

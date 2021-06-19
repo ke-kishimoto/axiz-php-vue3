@@ -25,27 +25,32 @@ const routes = [
         name: 'teacher',
         component: Teacher,
         children: [
+            // {
+            //     path: '',
+            //     component: CsvList,
+            //     props:{title: 'QA', tableName: 'QA', accountId: 1}
+            // },
             {
-              path: 'csvlist/qa',
-              name: 'qa',
+              path: 'qa',
+            //   name: 'qa',
               component: CsvList,
               props:{title: 'QA', tableName: 'QA', accountId: 1}
-            }
+            },
+            {
+                path: 'feedback',
+                // name: 'feedback',
+                component: CsvList,
+                props:{title: 'Feedback', tableName: 'Feedback', accountId: 1}
+              }
           ]
       },
-    //   {
-    //     path: '/csvlist/qa',
-    //     name: 'qa',
-    //     component: CsvList,
-    //     props:{title: 'QA', tableName: 'QA', accountId: 1}
-    //   }
   ]
 
-  const router = createRouter({
+const router = createRouter({
     mode: 'history',
     history: createWebHistory(),
     routes: routes
-  })
+})
   
 app.use(router)
 app.mount('#app')
