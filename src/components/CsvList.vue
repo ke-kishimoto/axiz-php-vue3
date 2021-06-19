@@ -342,48 +342,34 @@ export default {
             .then(res => res.json().then(json => this.categoryList = json))
             .catch(error => console.log(error))
         },
-    },
-    created: function() {
-        this.search();
-        let params = new URLSearchParams();
-        params.append('tableName', this.tableName);
-        fetch('http://localhost:8888/axiz-php/getColumnList', {
-            method:'post',
-            body: params
-        })
-        .then(res => res.json()
-            .then(json => {
-                this.columnList = json;
-                json.forEach(element => {
-                    if(element['column_name'] !== 'account_name') {
-                        this.form[element['column_name']] = '';
-                    }
-                })
+        init() {
+            this.search();
+            let params = new URLSearchParams();
+            params.append('tableName', this.tableName);
+            fetch('http://localhost:8888/axiz-php/getColumnList', {
+                method:'post',
+                body: params
             })
-        )
-        .catch(errors => console.log(errors))
+            .then(res => res.json()
+                .then(json => {
+                    this.columnList = json;
+                    json.forEach(element => {
+                        if(element['column_name'] !== 'account_name') {
+                            this.form[element['column_name']] = '';
+                        }
+                    })
+                })
+            )
+            .catch(errors => console.log(errors))
+            }
+        },
+    created: function() {
+        this.init();
     },
     watch: {
-        $route() {
-        // ルートの変更の検知...
-        this.search();
-        let params = new URLSearchParams();
-        params.append('tableName', this.tableName);
-        fetch('http://localhost:8888/axiz-php/getColumnList', {
-            method:'post',
-            body: params
-        })
-        .then(res => res.json()
-            .then(json => {
-                this.columnList = json;
-                json.forEach(element => {
-                    if(element['column_name'] !== 'account_name') {
-                        this.form[element['column_name']] = '';
-                    }
-                })
-            })
-        )
-        .catch(errors => console.log(errors))
+        tableName () {
+            // tableNameプロパティが変更された時の処理
+            this.init();
         }
     }
 }

@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div id="top">
         <table class="calendar">
             <tr>
                 <td class="calendar-head" colspan= 7>
                     <div class="month">
-                        <a href="#" @click="lastMonth()"><i class="fas fa-chevron-left"></i></a>
-                        <a href="#" @click="nextMonth()"><i class="fas fa-chevron-right"></i></a>
-                        　{{ year }}年{{ month }}月
+                        <a href="#" @click="lastMonth()">&lt;</a>
+                        <a href="#" @click="nextMonth()">&gt;</a>
+                        {{ year }}年{{ month }}月
                     </div>
                 </td>
             </tr>
@@ -32,7 +32,7 @@
                 </td>
             </tr>
         </table>
-        <modal v-bind:name="tableName" :scrollable="true" height="auto">
+        <!-- <modal v-bind:name="tableName" :scrollable="true" height="auto">
             <div class="container">
                 <div class="card">
                     <div class="card-body">
@@ -62,8 +62,8 @@
                     </div>
                 </div>
             </div>
-        </modal>
-        <modal v-bind:name="'view-'+tableName" :scrollable="true" height="auto">
+        </modal> -->
+        <!-- <modal v-bind:name="'view-'+tableName" :scrollable="true" height="auto">
             <div class="container">
                 <div class="card">
                     <div class="card-body">
@@ -83,7 +83,7 @@
                     </div>
                 </div>
             </div>
-        </modal>
+        </modal> -->
     </div>
 </template>
 <script>
@@ -149,18 +149,28 @@ export default {
             }
         },
         getCalData() {
-            params = new URLSearchParams();
+            let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('month', this.month);
-            axios.post('./getCalData', params)
-                .then(res => {
-                    this.calDataList = res.data;
+            // axios.post('./getCalData', params)
+            // .then(res => {
+            //     this.calDataList = res.data;
+            //     this.createCalData();
+            // })
+            fetch('http://localhost:8888/axiz-php/getCalData', {
+                method: 'post',
+                body: params
+            })
+            .then(res => res.json()
+                .then(json => {
+                    this.calDataList = json;
                     this.createCalData();
                 })
-                .catch(errors => console.log(errors))
+            )
+            .catch(errors => console.log(errors))
         },
         register(type) {
-            params = new URLSearchParams();
+            let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('type', type);
             params.append('year', this.year);
@@ -172,26 +182,37 @@ export default {
                 }
             })
             params.append('account_id', this.accountId);
-            //Ajaxリクエスト
-            axios.post('./updateRecord', params)
-                .then(res => {
-                    this.getCalData();
-                })
-                .catch(errors => console.log(errors))
+            // axios.post('./updateRecord', params)
+            // .then(res => {
+            //     this.getCalData();
+            // })
+            // .catch(errors => console.log(errors))
+            fetch('http://localhost:8888/axiz-php/updateRecord', {
+                method: 'post',
+                body: params
+            })
+            .then(res => res.json().then(() => this.getCalData()))
+            .catch(errors => console.log(errors))
             this.clearForm();
             this.$modal.hide(this.tableName);
         },
         deleteCalData() {
             const ans = confirm('削除してよろしいですか');
             if(!ans) return;
-            params = new URLSearchParams();
+            let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('id', this.form.id);
-            axios.post('./deleteById', params)
-                .then(res => this.getCalData())
-                .catch(errors => console.log(errors))
-                this.$modal.hide(this.tableName);
-                this.clearForm();
+            // axios.post('./deleteById', params)
+            // .then(res => this.getCalData())
+            // .catch(errors => console.log(errors))
+            fetch('http://localhost:8888/axiz-php/deleteById', {
+                method: 'post',
+                body: params
+            })
+            .then(res => res.json().then(() => this.getCalData()))
+            .catch(errors => console.log(errors))
+            this.$modal.hide(this.tableName);
+            this.clearForm();
         },
         lastMonth() {
             this.year = this.month === 1 ? this.year - 1 : this.year;
@@ -246,17 +267,94 @@ export default {
         this.getCalData();
 
         // カラムの取得
-        params = new URLSearchParams();
+        let params = new URLSearchParams();
         params.append('tableName', this.tableName);
-        axios.post('./getColumnList', params)
-        .then(res => {
-            this.columnList = res.data;
-            this.columnNum = res.data.length;
-            res.data.forEach(element => {
-                this.form[element['column_name']] = '';
-            })
+        // axios.post('./getColumnList', params)
+        // .then(res => {
+        //     this.columnList = res.data;
+        //     this.columnNum = res.data.length;
+        //     res.data.forEach(element => {
+        //         this.form[element['column_name']] = '';
+        //     })
+        // })
+        fetch('http://localhost:8888/axiz-php/getColumnList', {
+            method:'post',
+            body: params
         })
+        .then(res => res.json()
+            .then(json => {
+                this.columnList = json;
+                this.columnNum = json.length;
+                json.forEach(element => {
+                    this.form[element['column_name']] = '';
+                })
+            })
+        )
         .catch(errors => console.log(errors))
     }
 }
 </script>
+<style>
+@import url(https://use.fontawesome.com/releases/v5.6.1/css/all.css);
+#top {
+    width: 80%;
+}
+
+table.calendar {
+    width: 100%;
+    table-layout: fixed;
+}
+table.calendar tr th {
+    height: 40px;
+    text-align: center;
+}
+table.calendar tr td {
+    height: 110px;
+}
+table.calendar tr td.calendar-head {
+    height: 60px;
+}
+.sunday {
+    background-color: tomato;
+    color: white;
+}
+.saturday {
+    background-color: blue;
+    color: white;
+}
+.day-blank {
+    width: 100%;
+    height: 100%;
+    background-color: #EEE;
+}
+div.day {
+    margin-left: 5%;
+}
+div.day-user-data {
+    height: 60%;
+    overflow: scroll;
+}
+table.calendar th,
+table.calendar td {
+    border: 1px solid #CCC;
+    padding: 0;
+}
+table.calendar td.calendar-head {
+    border: 0;
+}
+tr td .cal-user-data, tr td .cal-athoer-data {
+    color: white;
+    /* background-color: royalblue; */
+    width: 95%;
+    margin: 2px auto;
+    border-radius: 5%;
+    cursor: pointer;
+    text-align: center;
+}
+tr td .cal-user-data {
+    background-color: royalblue;
+}
+tr td .cal-athoer-data {
+    background-color: tomato;
+}
+</style>
