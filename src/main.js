@@ -4,6 +4,7 @@ import App from './App.vue'
 import Login from './components/Login.vue'
 import Teacher from './components/Teacher.vue'
 import Admin from './components/Admin.vue'
+import SimpleList from './components/SimpleList.vue'
 import SwitchList from './components/SwitchList.vue'
 import CsvList from './components/CsvList.vue'
 import Calendar from './components/Calendar.vue'
@@ -80,7 +81,16 @@ const routes = [
       {
         path: '/admin',
         name: 'admin',
-        component: Admin
+        component: Admin,
+        children: [
+            {
+                path: 'room',
+                name: 'Room',
+                component: SimpleList,
+                props:{title: '教室', tableName: 'Room', accountId: 1}
+
+            }
+        ]
 
       },
   ]

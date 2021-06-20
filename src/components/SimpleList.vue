@@ -119,146 +119,183 @@ export default {
         }
     },
     methods: {
-        getModalColumnList() {
-            this.modalColumnList.forEach(column => {
-                if(column['input_type'] === 'table') {
-                    params = new URLSearchParams();
-                    params.append('tableName', column['input_value']);
-                    params.append('value', column['select_value']);
-                    params.append('lavel',column['select_value_lavel']);
-                    axios.post('./getSelectList', params)
-                        .then(res => {
-                            if(res.status !== 200) {
-                                console.log(res.data);
-                            } else {
-                                column.dataList = res.data;
-                            }
-                        }
-                    )
-                }else if(column['input_type'] === 'select') {
-                    let selectValueList = column['select_value'].split(',');
-                    let selectLabelList = column['select_value_lavel'].split(',');
-                    column.selectList = [];
-                    for(let i=0; i<selectValueList.length; i++) {
-                        column.selectList[i] = {
-                            value : selectValueList[i], 
-                            label : selectLabelList[i]
-                        };
-                    }
-                }
-            });
-        },
-        showModal(modalName) {
-            this.createFlg = true;
-            this.errMsg = '';
-            this.resetForm();
-            this.$modal.show(modalName);
-        },
-        closeModal(modalName) {
-            this.$modal.hide(modalName);
-        },
-        resetForm() {
-            Object.keys(this.form).forEach(key => {
-                this.form[key] = '';
-            })
-        },
+        // getModalColumnList() {
+        //     this.modalColumnList.forEach(column => {
+        //         if(column['input_type'] === 'table') {
+        //             let params = new URLSearchParams();
+        //             params.append('tableName', column['input_value']);
+        //             params.append('value', column['select_value']);
+        //             params.append('lavel',column['select_value_lavel']);
+        //             axios.post('./getSelectList', params)
+        //                 .then(res => {
+        //                     if(res.status !== 200) {
+        //                         console.log(res.data);
+        //                     } else {
+        //                         column.dataList = res.data;
+        //                     }
+        //                 }
+        //             )
+        //         }else if(column['input_type'] === 'select') {
+        //             let selectValueList = column['select_value'].split(',');
+        //             let selectLabelList = column['select_value_lavel'].split(',');
+        //             column.selectList = [];
+        //             for(let i=0; i<selectValueList.length; i++) {
+        //                 column.selectList[i] = {
+        //                     value : selectValueList[i], 
+        //                     label : selectLabelList[i]
+        //                 };
+        //             }
+        //         }
+        //     });
+        // },
+        // showModal(modalName) {
+        //     this.createFlg = true;
+        //     this.errMsg = '';
+        //     this.resetForm();
+        //     this.$modal.show(modalName);
+        // },
+        // closeModal(modalName) {
+        //     this.$modal.hide(modalName);
+        // },
+        // resetForm() {
+        //     Object.keys(this.form).forEach(key => {
+        //         this.form[key] = '';
+        //     })
+        // },
         search() {
-            params = new URLSearchParams();
+            let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('whereColumn', this.whereColumn);
             params.append('whereValue', this.whereValue);
             params.append('keyword', this.keyword);
             let order = this.order !== '' ? this.order + ' ' + this.orderOption : '';
             params.append('order', order);
-            axios.post('./searchList', params)
-                .then(res => {
-                    if(res.status !== 200) {
-                        console.log(res.data);
-                    } else {
-                        this.list = res.data;
-                    }
+            // axios.post('./searchList', params)
+            // .then(res => {
+            //     if(res.status !== 200) {
+            //         console.log(res.data);
+            //     } else {
+            //         this.list = res.data;
+            //     }
+            // })
+            fetch('http://localhost:8888/axiz-php/searchList', {
+                method: 'post',
+                body: params
+            }).then(res => {
+                if(res.status === 200) {
+                    res.json().then(json => this.list = json)
                 }
-            )
+            }).catch(error => console.log(error))
         },
-        register(type) {
-            //Axiosを使ったAJAX
-            //vueでバインドされた値はmethodの中ではthisで取得できる
-            params = new URLSearchParams();
-            params.append('tableName', this.tableName);
-            params.append('type', type);
-            Object.keys(this.form).forEach(key => {
-                if(!(type === 'insert' && key === 'id') && key !== 'account_name') {
-                    params.append(key, this.form[key]);
-                }
-            })
-            params.append('account_id', this.accountId);
-            //Ajaxリクエスト
-            axios.post('./updateRecord', params)
-                .then(res => {
-                    if(res.status !== 200) {
-                        this.errMsg = res.data.errMsg;
-                    } else {
-                        this.errMsg = '';
-                        this.search();
-                        this.$modal.hide('regist-modal-' + this.tableName);
-                        this.resetForm();
-                    }
-                })
+        // register(type) {
+        //     let params = new URLSearchParams();
+        //     params.append('tableName', this.tableName);
+        //     params.append('type', type);
+        //     Object.keys(this.form).forEach(key => {
+        //         if(!(type === 'insert' && key === 'id') && key !== 'account_name') {
+        //             params.append(key, this.form[key]);
+        //         }
+        //     })
+        //     params.append('account_id', this.accountId);
+        //     axios.post('./updateRecord', params)
+        //         .then(res => {
+        //             if(res.status !== 200) {
+        //                 this.errMsg = res.data.errMsg;
+        //             } else {
+        //                 this.errMsg = '';
+        //                 this.search();
+        //                 this.$modal.hide('regist-modal-' + this.tableName);
+        //                 this.resetForm();
+        //             }
+        //         })
                
-        },
-        edit(data) {
-            this.createFlg = false;
-            this.errMsg = '';
-            this.editId = data.id;
-            this.form = Object.assign({}, data);
-            this.$modal.show('regist-modal-' + this.tableName);
-        },
-        deleteRecord() {
-            const ans = confirm('削除してよろしいですか');
-            if(!ans) return;
-            params = new URLSearchParams();
-            params.append('tableName', this.tableName);
-            params.append('id', this.form.id);
+        // },
+        // edit(data) {
+        //     this.createFlg = false;
+        //     this.errMsg = '';
+        //     this.editId = data.id;
+        //     this.form = Object.assign({}, data);
+        //     this.$modal.show('regist-modal-' + this.tableName);
+        // },
+        // deleteRecord() {
+        //     const ans = confirm('削除してよろしいですか');
+        //     if(!ans) return;
+        //     let params = new URLSearchParams();
+        //     params.append('tableName', this.tableName);
+        //     params.append('id', this.form.id);
+        //     axios.post('./deleteById', params)
+        //         .then(res => this.search())
+        //     this.$modal.hide('regist-modal-' + this.tableName);
+        //     this.resetForm();
 
-            axios.post('./deleteById', params)
-                .then(res => this.search())
-            this.$modal.hide('regist-modal-' + this.tableName);
-            this.resetForm();
-
-        },
+        // },
         bulkDelete() {
             const ans = confirm('削除してよろしいですか');
             if(!ans) return;
-            params = new URLSearchParams();
+            let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('idList', this.idList);
-            axios.post('./bulkDelete', params)
-                .then(res => this.search())
+            // axios.post('./bulkDelete', params)
+            // .then(res => this.search())
+            fetch('http://localhost:8888/axiz-php', {
+                method: 'post',
+                body: params
+            })
+            .then(() => this.search())
+            .catch(error => console.log(error))
         },
+        init() {
+            this.search();
+            let params = new URLSearchParams();
+            params.append('tableName', this.tableName);
+            // axios.post('./getColumnList', params)
+            // .then(res => {
+            //     this.columnList = res.data;
+            //     this.columnNum = res.data.length;
+            //     res.data.forEach(element => {
+            //         if(element['column_name'] !== 'account_name') {
+            //             this.form[element['column_name']] = '';
+            //         }
+            //     })
+            // });
+            fetch('http://localhost:8888/axiz-php/getColumnList', {
+                method: params,
+                body: params
+            })
+            .then(res => res.json()
+                .then(json => {
+                    this.columnList = json;
+                    this.columnNum = json.length;
+                    json.forEach(element => {
+                        if(element['column_name'] !== 'account_name') {
+                            this.form[element['column_name']] = '';
+                        }
+                    })
+                })
+            )
+            params = new URLSearchParams();
+            params.append('tableName', this.tableName);
+            // axios.post('./getModalColumnList', params)
+            // .then(res => {
+            //     this.modalColumnList = res.data;
+            //     this.getModalColumnList();
+            // });
+
+            // fetch('http://localhost:8888/axiz-php/getModalColumnList', {
+            //     method: 'post',
+            //     body: params
+            // })
+            // .then()
+        }
         
     },
     created: function() {
-        this.search();
-        params = new URLSearchParams();
-        params.append('tableName', this.tableName);
-        axios.post('./getColumnList', params)
-        .then(res => {
-            this.columnList = res.data;
-            this.columnNum = res.data.length;
-            res.data.forEach(element => {
-                if(element['column_name'] !== 'account_name') {
-                    this.form[element['column_name']] = '';
-                }
-            })
-        });
-        params = new URLSearchParams();
-        params.append('tableName', this.tableName);
-        axios.post('./getModalColumnList', params)
-        .then(res => {
-            this.modalColumnList = res.data;
-            this.getModalColumnList();
-        });
-
+        this.init()
+    },
+    watch: {
+        tableName() {
+            this.init()
+        }
     }
 }
 </script>
