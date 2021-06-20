@@ -15,13 +15,13 @@
                 <li>
                     <router-link to="/teacher/document">ドキュメント</router-link>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="text-disp-tab" data-toggle="tab" href="#text-disp">教材管理</a>
+                <li>
+                    <!-- <a class="nav-link" id="text-disp-tab" data-toggle="tab" href="#text-disp">教材管理</a> -->
+                    <router-link to="/teacher/textdisp">教材管理</router-link>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="answer-tab2" href="#answer2">
-                        模範解答
-                    </a>
+                <li>
+                    <!-- <a class="nav-link" id="answer-tab2" href="#answer2">模範解答</a> -->
+                    <router-link to="/teacher/answer">模範解答</router-link>
                 </li>
 
                 <li v-for="(table, index) in tableList" v-bind:key="'table-'+index" class="nav-item">
@@ -29,9 +29,6 @@
                 </li>
 
                 <li v-for="(calendar, index) in calendarList" v-bind:key="'calendar'+index" class="nav-item">
-                    <!-- <a class="nav-link" v-bind:id="calendar.table_name+'-tab'" v-bind:href="'#'+calendar.table_name">
-                        {{ calendar.table_comment }}
-                    </a> -->
                     <router-link v-bind:to="'/teacher/' + calendar.table_name">{{ calendar.table_comment }}</router-link>
                 </li>
             </ul>
@@ -50,17 +47,6 @@
                     <custom-switch-list select-table-name="AccountRoom" list-table-name="AnswerDisp" account-id="<?php echo $_SESSION['user']['id'] ?>" flg-name1="表示" flg-name2="非表示"></custom-switch-list>
                 </div> -->
 
-                <!-- 
-                <div v-for="(table, index) in tableList" v-bind:key="index" class="tab-pane fade" v-bind:id="table.table_name" role="tabpanel" v-bind:aria-labelledby="table.table_name+'-tab'">
-                    <custom-list-csv v-bind:title="table.table_comment" v-bind:table-name="table.table_name" account-id="<?php echo $_SESSION['user']['id'] ?>"></custom-list-csv>
-                </div>
-                -->
-
-                <!-- <div v-for="(calendar, index) in calendarList" v-bind:key="index" class="tab-pane fade" v-bind:id="calendar.table_name" role="tabpanel" v-bind:aria-labelledby="calendar.table_name+'-tab'">
-                    <custom-calendar v-bind:table-comment="calendar.table_comment" v-bind:table-name="calendar.table_name" account-id="<?php echo $_SESSION['user']['id'] ?>"></custom-calendar>
-                </div> -->
-
-            <!-- </div> -->
         </div>
     </div>
 </template>
@@ -114,7 +100,7 @@ ul.nav {
     width: 25%;
 }
 main {
-    width: 75%;
+    /* width: 75%; */
 }
 #app {
     width: 100%;

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="top">
         <div class="head">
             <div>
                 <button class="btn btn-primary my-2" @click="showModal(tableName+'-regist-modal')">登録</button>
@@ -30,25 +30,30 @@
         <!-- 一覧表 -->
         <table class="table table-bordered">
             <tr>
-                <th v-for="column in columnList" v-bind:key="column.column_name">
+                <th>削除</th>
+                <th>更新</th>
+                <!-- <th v-for="column in columnList" v-bind:key="column.column_name">
                     <template v-if="column.column_name !== 'id' && column.column_name !== 'account_id'">
                         {{ column.column_comment }}
                     </template>
-                </th>
-                <th>更新</th>
-                <th>削除</th>
+                </th> -->
+                <template v-for="column in columnList" >
+                    <th v-if="column.column_name !== 'id' && column.column_name !== 'account_id'" v-bind:key="column.column_name">
+                            {{ column.column_comment }}
+                    </th>
+                </template>
             </tr>
             <tr v-for="data in list" v-bind:key="data.id">
+                <td><input type="checkbox" v-model="idList" v-bind:value="data.id"></td>
+                <td>
+                    <button v-if="accountId == data.account_id" class="btn btn-primary" @click="edit(data)">更新</button>
+                    <button v-else class="btn btn-secondary" @click="view(data)">参照</button>
+                </td>
                 <td v-for="column in columnList" v-bind:key="column.column_name">
                     <template v-if="column.column_name !== 'id'">
                         <pre>{{ data[column.column_name] }}</pre>
                     </template>
                 </td>
-                <td>
-                    <button v-if="accountId == data.account_id" class="btn btn-primary" @click="edit(data)">更新</button>
-                    <button v-else class="btn btn-secondary" @click="view(data)">参照</button>
-                </td>
-                <td><input type="checkbox" v-model="idList" v-bind:value="data.id"></td>
             </tr>
         </table>
         <!-- CSV取込用 モーダルウィンドウ -->
@@ -374,3 +379,24 @@ export default {
     }
 }
 </script>
+
+<style>
+#top {
+    max-width: 900px;
+}
+div.head {
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
+}
+table tr  {
+    max-width: 900px;
+}
+table tr th {
+    min-width: 50px;
+}
+table tr td pre {
+    white-space: pre-wrap;
+    /* flex-wrap: wrap; */
+}
+</style>

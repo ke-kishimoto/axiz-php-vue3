@@ -1,11 +1,10 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router';
-// import Vue from 'vue'
 import App from './App.vue'
-// import router from './router'
 import Login from './components/Login.vue'
 import Test from './components/Test.vue'
 import Teacher from './components/Teacher.vue'
+import SwitchList from './components/SwitchList.vue'
 import CsvList from './components/CsvList.vue'
 import Calendar from './components/Calendar.vue'
 import TeacherDoc from './components/TeacherDoc.vue'
@@ -34,12 +33,22 @@ const routes = [
             {
                 path: 'document',
                 component: TeacherDoc,
-              },
+            },
             {
-              path: 'qa',
-              name: 'QA',
-              component: CsvList,
-              props:{title: 'QA', tableName: 'QA', accountId: 1}
+                path: 'textdisp',
+                component: SwitchList,
+                props:{selectTableName: 'AccountRoom', listTableName: 'SubjectDisp', accountId: 1, flgName1: '表示', flgName2: '非表示'}
+            },
+            {
+                path: 'answer',
+                component: SwitchList,
+                props:{selectTableName: 'AccountRoom', listTableName: 'AnswerDisp', accountId: 1, flgName1: '表示', flgName2: '非表示'}
+            },
+            {
+                path: 'qa',
+                name: 'QA',
+                component: CsvList,
+                props:{title: 'QA', tableName: 'QA', accountId: 1}
             },
             {
                 path: 'feedback',
