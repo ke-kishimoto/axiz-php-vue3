@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router';
 import App from './App.vue'
 import Login from './components/Login.vue'
-import Test from './components/Test.vue'
 import Teacher from './components/Teacher.vue'
+import Admin from './components/Admin.vue'
 import SwitchList from './components/SwitchList.vue'
 import CsvList from './components/CsvList.vue'
 import Calendar from './components/Calendar.vue'
@@ -15,11 +15,6 @@ const routes = [
         path: '/',
         name: 'login',
         component: Login
-      },
-      {
-        path: '/test',
-        name: 'test',
-        component: Test 
       },
       {
         path: '/teacher',
@@ -81,6 +76,12 @@ const routes = [
                 props:{title: '講師状況報告書', tableName: 'StatusReport', accountId: 1}
             },
           ]
+      },
+      {
+        path: '/admin',
+        name: 'admin',
+        component: Admin
+
       },
   ]
 

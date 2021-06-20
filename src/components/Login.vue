@@ -13,7 +13,7 @@
             <input type="password" id="password" name="password" v-model="password">
         </p>
         <p>
-            <select id="userType" name="userType">
+            <select id="userType" name="userType" v-model="userType">
                 <option value="student">生徒</option>
                 <option value="teacher">講師</option>
                 <option value="admin">管理者</option>
@@ -32,6 +32,7 @@ export default {
         return {
             id: '',
             password: '',
+            userType: 'student',
         }
     },
     methods: {
@@ -46,12 +47,8 @@ export default {
             .then(res => {
                 res.json()
                 .then(json => {
-                    console.log(json);
-                    console.log(json.login);
                     if (json['login'] === 'OK') {
-                        console.log('ログイン成功');
-                        // this.$router.push({name:'test'});
-                        this.$router.push({name:'teacher'});
+                        this.$router.push({name:this.userType});
                     } else {
                         console.log('ログインエラー');
                     }

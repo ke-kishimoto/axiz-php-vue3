@@ -258,40 +258,49 @@ export default {
             }
             this.days.push(weekDay);
         },
+        init() {
+            const today = new Date(); // 現在の日時
+            this.year = today.getFullYear();
+            this.month = today.getMonth() + 1;
+            this.createCalendar(today.getFullYear(), today.getMonth());
+            this.getCalData();
+
+            // カラムの取得
+            let params = new URLSearchParams();
+            params.append('tableName', this.tableName);
+            // axios.post('./getColumnList', params)
+            // .then(res => {
+            //     this.columnList = res.data;
+            //     this.columnNum = res.data.length;
+            //     res.data.forEach(element => {
+            //         this.form[element['column_name']] = '';
+            //     })
+            // })
+            fetch('http://localhost:8888/axiz-php/getColumnList', {
+                method:'post',
+                body: params
+            })
+            .then(res => res.json()
+                .then(json => {
+                    this.columnList = json;
+                    this.columnNum = json.length;
+                    json.forEach(element => {
+                        this.form[element['column_name']] = '';
+                    })
+                })
+            )
+            .catch(errors => console.log(errors))
+        },
     },
     created: function () {
-        const today = new Date(); // 現在の日時
-        this.year = today.getFullYear();
-        this.month = today.getMonth() + 1;
-        this.createCalendar(today.getFullYear(), today.getMonth());
-        this.getCalData();
-
-        // カラムの取得
-        let params = new URLSearchParams();
-        params.append('tableName', this.tableName);
-        // axios.post('./getColumnList', params)
-        // .then(res => {
-        //     this.columnList = res.data;
-        //     this.columnNum = res.data.length;
-        //     res.data.forEach(element => {
-        //         this.form[element['column_name']] = '';
-        //     })
-        // })
-        fetch('http://localhost:8888/axiz-php/getColumnList', {
-            method:'post',
-            body: params
-        })
-        .then(res => res.json()
-            .then(json => {
-                this.columnList = json;
-                this.columnNum = json.length;
-                json.forEach(element => {
-                    this.form[element['column_name']] = '';
-                })
-            })
-        )
-        .catch(errors => console.log(errors))
+        this.init()
+    },
+    watch: {
+        tableName() {
+            this.init()
+        }
     }
+
 }
 </script>
 <style>
