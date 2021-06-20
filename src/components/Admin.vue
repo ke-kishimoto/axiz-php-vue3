@@ -15,11 +15,7 @@
                 <li v-for="(table, index) in tableList" v-bind:key="'table-'+index">
                     <router-link v-bind:to="'/admin/' + table.table_name">{{ table.table_comment }}</router-link>
                 </li>
-
                 <li>
-                    <!-- <a class="nav-link" id="table-create-tab" data-toggle="tab" href="#table-create" aria-selected="false">
-                        テーブル作成
-                    </a> -->
                     <router-link to="/admin/tableManagement">テーブル作成</router-link>
                 </li>
             </ul>

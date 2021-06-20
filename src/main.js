@@ -4,7 +4,9 @@ import App from './App.vue'
 import Login from './components/Login.vue'
 import Teacher from './components/Teacher.vue'
 import Admin from './components/Admin.vue'
+import Student from './components/Student.vue'
 import TableManagement from './components/TableManagement.vue'
+import LinkList from './components/LinkList.vue'
 import SimpleList from './components/SimpleList.vue'
 import SwitchList from './components/SwitchList.vue'
 import CsvList from './components/CsvList.vue'
@@ -17,8 +19,20 @@ const routes = [
         path: '/',
         name: 'login',
         component: Login
-      },
-      {
+    },
+    {
+        path: '/student',
+        name: 'student',
+        component: Student,
+        children: [
+            {
+                path: 'answer',
+                name: 'answer',
+                component: LinkList,
+            }
+        ]
+    },
+    {
         path: '/teacher',
         name: 'teacher',
         component: Teacher,
