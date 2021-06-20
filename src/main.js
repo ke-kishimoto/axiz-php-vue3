@@ -4,6 +4,7 @@ import App from './App.vue'
 import Login from './components/Login.vue'
 import Teacher from './components/Teacher.vue'
 import Admin from './components/Admin.vue'
+import TableManagement from './components/TableManagement.vue'
 import SimpleList from './components/SimpleList.vue'
 import SwitchList from './components/SwitchList.vue'
 import CsvList from './components/CsvList.vue'
@@ -84,12 +85,58 @@ const routes = [
         component: Admin,
         children: [
             {
+                path: 'tablemanagement',
+                name: 'TableManagement',
+                component: TableManagement,
+            },
+            {
                 path: 'room',
                 name: 'Room',
                 component: SimpleList,
                 props:{title: '教室', tableName: 'Room', accountId: 1}
-
-            }
+            },
+            {
+                path: 'account',
+                name: 'Account',
+                component: SimpleList,
+                props:{title: 'アカウント', tableName: 'Account', accountId: 1}
+            },
+            {
+                path: 'subject',
+                name: 'Subject',
+                component: SimpleList,
+                props:{title: '科目', tableName: 'Subject', accountId: 1}
+            },
+            {
+                path: 'answerpath',
+                name: 'AnswerPath',
+                component: SimpleList,
+                props:{title: '模範解答', tableName: 'AnswerPath', accountId: 1}
+            },
+            {
+                path: 'category',
+                name: 'Category',
+                component: SimpleList,
+                props:{title: 'カテゴリ', tableName: 'Category', accountId: 1}
+            },
+            {
+                path: 'accountroom',
+                name: 'AccountRoom',
+                component: SimpleList,
+                props:{title: 'アカウント-教室', tableName: 'AccountRoom', accountId: 1}
+            },
+            {
+                path: 'tabledef',
+                name: 'TableDef',
+                component: SimpleList,
+                props:{title: 'テーブル管理', tableName: 'TableDef', accountId: 1}
+            },
+            {
+                path: 'columndef',
+                name: 'ColumnDef',
+                component: SimpleList,
+                props:{title: 'カラム管理', tableName: 'ColumnDef', accountId: 1}
+            },
         ]
 
       },

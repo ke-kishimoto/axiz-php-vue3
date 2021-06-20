@@ -259,7 +259,7 @@ export default {
             //     })
             // });
             fetch('http://localhost:8888/axiz-php/getColumnList', {
-                method: params,
+                method: 'post',
                 body: params
             })
             .then(res => res.json()
