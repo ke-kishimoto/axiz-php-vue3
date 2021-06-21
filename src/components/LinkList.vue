@@ -2,8 +2,8 @@
     <div>
         <p>
             コース：
-            <select @change="selectRoom($event)">
-                <option v-for="room in roomList" v-bind:key="room.room_id" v-bind:value="room.room_id">{{ room.room_name }}</option>
+            <select @change="changeSelect($event)">
+                <option v-for="item in selectList" v-bind:key="item.id" v-bind:value="item.id">{{ item.name }}</option>
             </select>
         </p>
         <br>
@@ -19,37 +19,34 @@
 
 <script>
 export default {
-    // props: ['selectTableName', 'listTableName','accountId'],
+    props: ['selectTableName', 'listTableName','accountId'],
     data: function() {
         return {
-            roomList: [],
-            roomId: '',
+            selectList: [],
+            targetId: '',
             // subjectList: [],
             displayList: {},
             answerList: [],
         }
     },
     methods: {
-        getRoomList() {
-            // axios.get('./searchAccountRoomList')
-            // .then(response =>  {
-            //     this.roomList = response.data
-            //     this.roomId = this.roomList[0].room_id
-            //     // this.getSubjectList(this.roomId)
-            //     this.getAnswerList(this.roomId)
-            // })
-            fetch('http://localhost:8888/axiz-php/searchAccountRoomList', {
-                method: 'get',
+        getSelectList() {
+            let params = new URLSearchParams();
+            params.append('tableName', this.selectTableName);
+            params.append('accountId', this.accountId);
+            fetch('http://localhost:8888/axiz-php/getSelectboxList', {
+                method: 'post',
+                body: params,
+                credentials: 'include',
             })
             .then(res => {
                 if(res.status === 200) {
-                    // console.log(res);
                     res.json()
                     .then(json => {
                         console.log(json)
-                        this.roomList = json
-                        this.roomId = this.roomList[0].room_id
-                        this.getAnswerList(this.roomId)
+                        this.selectList = json
+                        this.targetId = this.selectList[0].id
+                        this.getItemList(this.targetId)
                     })
                 } else {
                     console.log(res);
@@ -57,28 +54,26 @@ export default {
             })
             .catch(error => console.log(error))
         },
-        // getSubjectList(roomId) {
+        // getSubjectList(targetId) {
         //     let params = new URLSearchParams();
-        //     params.append('room_id', roomId);
-        //     this.roomId = roomId;
+        //     params.append('room_id', targetId);
+        //     this.targetId = targetId;
         //     axios.post('./searchSubjectList', params)
         //     .then(response => {
         //         this.subjectList = response.data
         //         this.subjectList.forEach(el => this.$set(this.displayList, [el['subject_code']] , el['display_flg']))
         //     })
         // },
-        getAnswerList(roomId) {
+        getItemList(targetId) {
             let params = new URLSearchParams();
-            params.append('room_id', roomId);
-            // axios.post('./searchModelAnswer', params)
-            //     .then(response => this.answerList = response.data)
+            params.append('room_id', targetId);
             fetch('http://localhost:8888/axiz-php/searchModelAnswer', {
                 method: 'post',
-                body: params
+                body: params,
+                credentials: 'include',
             })
             .then(res => {
                 if(res.status === 200) {
-                    console.log(res);
                     res.json().then(json => this.answerList = json)
                 } else {
                     console.log(res);
@@ -86,13 +81,13 @@ export default {
             })
             .catch(error => console.log(error))
         },
-        selectRoom(event) {
+        changeSelect(event) {
             // this.getSubjectList(event.target.value)
-            this.getAnswerList(event.target.value)
+            this.getItemList(event.target.value)
         },
     },
     created: function() {
-        this.getRoomList()
+        this.getSelectList()
     }
 }
 </script>

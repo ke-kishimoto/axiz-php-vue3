@@ -175,25 +175,13 @@ export default {
             uploadFile: null,
             csvHeadType: 'disp',
             csvOutputColumn: [],
-            categoryList: [],
             whereColumn: '',
             whereValue: '',
         }
     },
     methods: {
-        showModal(modalName) {
-            this.createFlg = true;
-            this.getCategoryList();
-            this.resetForm();
-            this.$modal.show(modalName);
-        },
-        closeModal(modalName) {
-            this.$modal.hide(modalName);
-        },
-        resetForm() {
-            Object.keys(this.form).forEach(key => {
-                this.form[key] = '';
-            })
+        showModal() {
+            this.$router.push({name:'editModal', params: {tableName: this.tableName, editId: -1, title: this.title}});
         },
         search() {
             let params = new URLSearchParams();
@@ -216,56 +204,16 @@ export default {
             .catch(errors => console.log(errors))
 
         },
-        register(type) {
-            let params = new URLSearchParams();
-            params.append('tableName', this.tableName);
-            params.append('type', type);
-            Object.keys(this.form).forEach(key => {
-                if(!(type === 'insert' && key === 'id') && key !== 'account_name') {
-                    params.append(key, this.form[key]);
-                }
-            })
-            params.append('account_id', this.accountId);
-            fetch('http://localhost:8888/axiz-php/updateRecord', {
-                method:'post',
-                body:params
-            }).then(res => {
-                if(res.status !== 200) {
-                    console.log(res);
-                }else {
-                    this.search();
-                }
-            })
-            .catch(errors => console.log(errors))
-            this.$modal.hide(this.tableName+'-regist-modal');
-            this.resetForm();
-        },
+        
         edit(data) {
             this.createFlg = false;
             this.editId = data.id;
-            this.getCategoryList();
             this.form = Object.assign({}, data);
             this.$modal.show(this.tableName+'-regist-modal');
         },
         view(data) {
             this.form = Object.assign({}, data);
             this.$modal.show(this.tableName+'-view-modal');
-        },
-        deleteRecord() {
-            const ans = confirm('削除してよろしいですか');
-            if(!ans) return;
-            let params = new URLSearchParams();
-            params.append('tableName', this.tableName);
-            params.append('id', this.form.id);
-            fetch('http://localhost:8888/deleteById', {
-                method:'post',
-                body:params
-            })
-            .then(() => this.search())
-            .catch(errors => console.log(errors))
-            this.$modal.hide(this.tableName+'-regist-modal');
-            this.resetForm();
-
         },
         bulkDelete() {
             const ans = confirm('削除してよろしいですか');
@@ -337,16 +285,6 @@ export default {
             .catch(error => { console.log(error) })
             this.$modal.hide(this.tableName+'-csv-download-modal');
         },
-        getCategoryList() {
-            let params = new URLSearchParams();
-            params.append('tableName', this.tableName);
-            fetch('http://localhost:8888/axiz-php/getCategoryList', {
-                method:'post',
-                body:params
-            })
-            .then(res => res.json().then(json => this.categoryList = json))
-            .catch(error => console.log(error))
-        },
         init() {
             this.search();
             let params = new URLSearchParams();
@@ -358,16 +296,11 @@ export default {
             .then(res => res.json()
                 .then(json => {
                     this.columnList = json;
-                    json.forEach(element => {
-                        if(element['column_name'] !== 'account_name') {
-                            this.form[element['column_name']] = '';
-                        }
-                    })
                 })
             )
             .catch(errors => console.log(errors))
-            }
-        },
+        }
+    },
     created: function() {
         this.init();
     },

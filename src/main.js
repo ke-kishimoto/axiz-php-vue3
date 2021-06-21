@@ -5,6 +5,7 @@ import Login from './components/Login.vue'
 import Teacher from './components/Teacher.vue'
 import Admin from './components/Admin.vue'
 import Student from './components/Student.vue'
+import EditModal from './components/EditModal.vue'
 import TableManagement from './components/TableManagement.vue'
 import LinkList from './components/LinkList.vue'
 import SimpleList from './components/SimpleList.vue'
@@ -29,6 +30,7 @@ const routes = [
                 path: 'answer',
                 name: 'answer',
                 component: LinkList,
+                props:{selectTableName: 'AccountRoom', listTableName: 'ModelAnswer', accountId: 1}
             }
         ]
     },
@@ -40,6 +42,11 @@ const routes = [
             {
                 path: '',
                 component: TeacherDoc,
+            },
+            {
+                path: 'editModal',
+                name: 'editModal',
+                component: EditModal,
             },
             {
                 path: 'document',

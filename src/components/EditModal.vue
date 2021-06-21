@@ -18,9 +18,9 @@
             </div>
             <div class="modal-btn">
                 <div>
-                    <button v-if="createFlg" @click="register('insert')">登録</button>
+                    <button v-if="createFlg" @click="register()">登録</button>
                     <div v-else>
-                        <button @click="register('update')">更新</button>
+                        <button @click="register()">更新</button>
                         <button @click="deleteRecord">削除</button>
                     </div>
                 </div>
@@ -31,26 +31,45 @@
 
 <script>
 export default {
-    props: ['title', 'createFlg', 'columnList', 'categoryList', 'form'],
-    // data: function() {
-    //     return {
-    //         columnList: [],
-    //         categoryList: [],
-    //         form: {},
-    //         createFlg: true,
-    //     }
-    // },
+    name: 'editModal',
+    // props: ['tableName', 'editId'],
+    data: function() {
+        return {
+            createFlg: false,
+            tableName: '',
+            editId: -1,
+            columnList: [],
+            categoryList: [],
+            form: {
+                id: '',
+            },
+        }
+    },
     methods: {
-        register(type) {
+        getCategoryList() {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
+            fetch('http://localhost:8888/axiz-php/getCategoryList', {
+                method:'post',
+                body:params
+            })
+            .then(res => res.json().then(json => this.categoryList = json))
+            .catch(error => console.log(error))
+        },
+        register() {
+            let params = new URLSearchParams();
+            params.append('tableName', this.tableName);
+            let type = 'update';
+            if(this.editId === -1) {
+                type = 'insert';
+            }
             params.append('type', type);
             Object.keys(this.form).forEach(key => {
                 if(!(type === 'insert' && key === 'id') && key !== 'account_name') {
                     params.append(key, this.form[key]);
                 }
             })
-            params.append('account_id', this.accountId);
+            // params.append('account_id', this.accountId);
             fetch('http://localhost:8888/axiz-php/updateRecord', {
                 method:'post',
                 body:params
@@ -62,8 +81,8 @@ export default {
                 }
             })
             .catch(errors => console.log(errors))
-            this.$modal.hide(this.tableName+'-regist-modal');
-            this.resetForm();
+            // this.$modal.hide(this.tableName+'-regist-modal');
+            // this.resetForm();
         },
         deleteRecord() {
             const ans = confirm('削除してよろしいですか');
@@ -77,9 +96,53 @@ export default {
             })
             .then(() => this.search())
             .catch(errors => console.log(errors))
-            this.$modal.hide(this.tableName+'-regist-modal');
-            this.resetForm();
+            // this.$modal.hide(this.tableName+'-regist-modal');
+            // this.resetForm();
         },
+        selectById() {
+            if(this.editId === -1) {
+                this.createFlg = true
+                return
+            }
+            let params = new URLSearchParams();
+            params.append('id', this.editId);
+            fetch('http://localhost:8888/axiz-php/selectById', {
+                 method:'post',
+                body: params,
+            })
+            .then(res => res.json().then(data => this.form = Object.assign({}, data)))
+            .catch(error => console.log(error))
+        }
+    },
+    created: function() {
+        
+        this.tableName = this.$route.params.tableName;
+        this.editId = this.$route.params.editId;
+        this.title = this.$route.params.title;
+        let params = new URLSearchParams();
+        params.append('tableName', this.tableName);
+        fetch('http://localhost:8888/axiz-php/getColumnList', {
+            method:'post',
+            body: params,
+        })
+        .then(res => res.json()
+            .then(json => {
+                this.columnList = json;
+                json.forEach(element => {
+                    if(element['column_name'] !== 'account_name') {
+                        this.form[element['column_name']] = '';
+                    }
+                })
+            })
+        )
+        .catch(errors => console.log(errors))
+        this.getCategoryList();
+        this.selectById();
+    },
+    watch: {
+        tableName() {
+            console.log(this.tableName);
+        }
     }
     
 }

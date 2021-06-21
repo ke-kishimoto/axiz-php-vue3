@@ -43,6 +43,7 @@ export default {
             fetch('http://localhost:8888/axiz-php/login2', {
                 method: 'POST',
                 body: params,
+                credentials: 'include',
             })
             .then(res => {
                 res.json()
