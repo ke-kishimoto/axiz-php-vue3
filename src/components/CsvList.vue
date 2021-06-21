@@ -98,59 +98,6 @@
                 </div>
             </div>
         </modal> -->
-        <!-- 登録用 モーダルウィンドウ -->
-        <!-- <modal :name="tableName+'-regist-modal'" :scrollable="true" height="auto">
-            <div class="card">
-                <div class="card-body">
-                    <div class="card-title">
-                        <h2 v-if="createFlg">{{ title }}登録</h2>
-                        <h2 v-else>{{ title }}更新</h2>
-                    </div>
-
-                    <div class="card-text">
-                        <div v-for="column in columnList" v-bind:key="column.column_name">
-                            <template v-if="column.column_name !== 'id' && column.column_name !== 'account_id' && column.column_name !== 'account_name'" class="form-group">
-                                <label v-bind:for="column.column_name">{{column.column_comment}}</label>
-                                <input v-if="column.input_type === 'text'" :list="column.column_name" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length">
-                                <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
-                                    <option v-for="category in categoryList[column.column_name]" v-bind:key="category.category_value" :value="category['category_value']"></option>
-                                </datalist>
-                                <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7"></textarea>
-                            </template>
-                        </div>
-                        <div class="modal-btn">
-                            <div>
-                                <button v-if="createFlg" class="btn btn-primary my-2" @click="register('insert')">登録</button>
-                                <div v-else>
-                                    <button class="btn btn-primary my-2" @click="register('update')">更新</button>
-                                    <button class="btn btn-danger my-2" @click="deleteRecord">削除</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
-        <!-- 参照用 モーダルウィンドウ -->
-        <!-- <modal :name="tableName+'-view-modal'" :scrollable="true" height="auto">
-            <div class="card">
-                <div class="card-body">
-                    <div class="card-title">
-                        <h2>{{ title }}</h2>
-                    </div>
-                    <div class="card-text">
-                        <div v-for="column in columnList" v-bind:key="column.column_name">
-                            <template v-if="column.column_name !== 'id' && column.column_name !== 'account_id' && column.column_name !== 'account_name'">
-                            <span class="text-muted">{{ column.column_comment }}</span>
-                            <p>
-                                <pre>{{ form[column.column_name] }}</pre>
-                            </p>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
     </div>
 </template>
 
@@ -203,8 +150,7 @@ export default {
             this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
         },
         view(data) {
-            this.form = Object.assign({}, data);
-            this.$modal.show(this.tableName+'-view-modal');
+            this.$router.push({name:'viewModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
         },
         bulkDelete() {
             const ans = confirm('削除してよろしいですか');

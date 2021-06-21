@@ -6,6 +6,7 @@ import Teacher from './components/Teacher.vue'
 import Admin from './components/Admin.vue'
 import Student from './components/Student.vue'
 import EditModal from './components/EditModal.vue'
+import ViewModal from './components/ViewModal.vue'
 import TableManagement from './components/TableManagement.vue'
 import LinkList from './components/LinkList.vue'
 import SimpleList from './components/SimpleList.vue'
@@ -47,6 +48,11 @@ const routes = [
                 path: 'editModal',
                 name: 'editModal',
                 component: EditModal,
+            },
+            {
+                path: 'viewModal',
+                name: 'viewModal',
+                component: ViewModal,
             },
             {
                 path: 'document',

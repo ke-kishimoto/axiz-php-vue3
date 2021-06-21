@@ -138,11 +138,11 @@ export default {
                         this.form[element['column_name']] = '';
                     }
                 })
+            this.selectById();
             })
         )
         .catch(errors => console.log(errors))
         this.getCategoryList();
-        this.selectById();
     },
 }
 </script>
