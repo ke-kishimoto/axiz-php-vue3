@@ -3,6 +3,7 @@
         <div>
             <h2 v-if="createFlg">{{ title }}登録</h2>
             <h2 v-else>{{ title }}更新</h2>
+            <button type="button" @click="goback()">戻る</button>
         </div>
 
         <div>
@@ -18,9 +19,9 @@
             </div>
             <div class="modal-btn">
                 <div>
-                    <button v-if="createFlg" @click="register()">登録</button>
+                    <button v-if="createFlg" @click="register">登録</button>
                     <div v-else>
-                        <button @click="register()">更新</button>
+                        <button @click="register">更新</button>
                         <button @click="deleteRecord">削除</button>
                     </div>
                 </div>
@@ -46,6 +47,9 @@ export default {
         }
     },
     methods: {
+        goback() {
+            this.$router.push({name:this.tableName})
+        },
         getCategoryList() {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
@@ -60,29 +64,27 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             let type = 'update';
-            if(this.editId === -1) {
+            if(Number(this.editId) === -1) {
                 type = 'insert';
             }
             params.append('type', type);
             Object.keys(this.form).forEach(key => {
-                if(!(type === 'insert' && key === 'id') && key !== 'account_name') {
+                if(!(type === 'insert' && key === 'id') && (key !== 'account_name' && key !== 'update_date')) {
                     params.append(key, this.form[key]);
                 }
             })
-            // params.append('account_id', this.accountId);
             fetch('http://localhost:8888/axiz-php/updateRecord', {
                 method:'post',
-                body:params
+                body:params, 
+                credentials: 'include',
             }).then(res => {
                 if(res.status !== 200) {
                     console.log(res);
                 }else {
-                    this.search();
+                    this.$router.push({name:this.tableName})
                 }
             })
             .catch(errors => console.log(errors))
-            // this.$modal.hide(this.tableName+'-regist-modal');
-            // this.resetForm();
         },
         deleteRecord() {
             const ans = confirm('削除してよろしいですか');
@@ -90,14 +92,14 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('id', this.form.id);
-            fetch('http://localhost:8888/deleteById', {
+            fetch('http://localhost:8888/axiz-php/deleteById', {
                 method:'post',
-                body:params
+                body:params, 
             })
-            .then(() => this.search())
+            .then(() => {
+                this.$router.push({name:this.tableName})
+            })
             .catch(errors => console.log(errors))
-            // this.$modal.hide(this.tableName+'-regist-modal');
-            // this.resetForm();
         },
         selectById() {
             if(this.editId === -1) {
@@ -106,19 +108,22 @@ export default {
             }
             let params = new URLSearchParams();
             params.append('id', this.editId);
+            params.append('tableName', this.tableName);
             fetch('http://localhost:8888/axiz-php/selectById', {
                  method:'post',
                 body: params,
+                credentials: 'include',
             })
-            .then(res => res.json().then(data => this.form = Object.assign({}, data)))
+            .then(res => res.json().then(data => {
+                this.form = Object.assign({}, data)
+            }))
             .catch(error => console.log(error))
         }
     },
     created: function() {
-        
-        this.tableName = this.$route.params.tableName;
-        this.editId = this.$route.params.editId;
-        this.title = this.$route.params.title;
+        this.tableName = this.$route.query.tableName;
+        this.editId = this.$route.query.editId;
+        this.title = this.$route.query.title;
         let params = new URLSearchParams();
         params.append('tableName', this.tableName);
         fetch('http://localhost:8888/axiz-php/getColumnList', {
@@ -129,7 +134,7 @@ export default {
             .then(json => {
                 this.columnList = json;
                 json.forEach(element => {
-                    if(element['column_name'] !== 'account_name') {
+                    if(element['column_name'] !== 'account_name' && element['column_name'] !== 'update_date') {
                         this.form[element['column_name']] = '';
                     }
                 })
@@ -139,11 +144,5 @@ export default {
         this.getCategoryList();
         this.selectById();
     },
-    watch: {
-        tableName() {
-            console.log(this.tableName);
-        }
-    }
-    
 }
 </script>

@@ -165,11 +165,6 @@ export default {
             keyword: '',
             order: '',
             orderOption: '',
-            form: {
-                id: '',
-            },
-            editId: -1,
-            createFlg: true,
             idList: [],
             msg: '',
             uploadFile: null,
@@ -181,7 +176,7 @@ export default {
     },
     methods: {
         showModal() {
-            this.$router.push({name:'editModal', params: {tableName: this.tableName, editId: -1, title: this.title}});
+            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: -1, title: this.title}});
         },
         search() {
             let params = new URLSearchParams();
@@ -202,14 +197,10 @@ export default {
                 }
             })
             .catch(errors => console.log(errors))
-
         },
         
         edit(data) {
-            this.createFlg = false;
-            this.editId = data.id;
-            this.form = Object.assign({}, data);
-            this.$modal.show(this.tableName+'-regist-modal');
+            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
         },
         view(data) {
             this.form = Object.assign({}, data);
