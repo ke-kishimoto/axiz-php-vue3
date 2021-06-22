@@ -2,9 +2,9 @@
     <div id="top">
         <div class="head">
             <div>
-                <button class="btn btn-primary my-2" @click="showModal(tableName+'-regist-modal')">登録</button>
-                <button class="btn btn-primary my-2" @click="showModal(tableName+'-csv-modal')">CSV取込</button>
-                <button class="btn btn-primary my-2" @click="showModal(tableName+'-csv-download-modal')">CSV出力</button>
+                <button class="btn btn-primary my-2" @click="newRegist">登録</button>
+                <button class="btn btn-primary my-2" @click="a">CSV取込</button>
+                <button class="btn btn-primary my-2" @click="openCsvOutModal">CSV出力</button>
             </div>
             <div class="search">
             <select v-model="whereColumn">
@@ -56,6 +56,17 @@
                 </td>
             </tr>
         </table>
+         <!-- コンポーネント OutCsvModal -->
+        <CsvOutModal @close="closeCsvOutModal" v-if="csvOutModal">
+            <template v-slot:columnList>
+                <div v-for="column in columnList" v-bind:key="column.column_name" class="form-check">
+                    <input class="form-check-input" type="checkbox" v-bind:value="column.column_name" v-model="csvOutputColumn">
+                    <label class="form-check-label" v-bind:for="column.columun_name">
+                        {{ column.column_comment }}
+                    </label>
+                </div>
+            </template>
+        </CsvOutModal>
         <!-- CSV取込用 モーダルウィンドウ -->
         <!-- <modal :name="tableName+'-csv-modal'" :scrollable="true" height="auto">
             <div class="container">
@@ -67,42 +78,13 @@
                 </div>
             </div>
         </modal> -->
-        <!-- CSV出力用 モーダルウィンドウ -->
-        <!-- <modal :name="tableName+'-csv-download-modal'" :scrollable="true" height="auto">
-            <div class="container">
-                <h2>CSV出力</h2>
-                <h4>CSVヘッダー</h4>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="csv-header" id="csv-head1" v-model="csvHeadType" value="disp">
-                    <label class="form-check-label" for="csv-head1">
-                        表示名
-                    </label> 
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="csv-header" id="csv-head2" v-model="csvHeadType" value="column">
-                    <label class="form-check-label" for="csv-head2">
-                        カラム名
-                    </label>
-                </div>
-                <br>
-                <h4>出力項目</h4>
-                <div v-for="column in columnList" v-bind:key="column.column_name" class="form-check">
-                    <input class="form-check-input" type="checkbox" v-bind:value="column.column_name" v-model="csvOutputColumn">
-                    <label class="form-check-label" v-bind:for="column.columun_name">
-                        {{ column.column_comment }}
-                    </label>
-                </div>
-                <div class="modal-btn">
-                    <button class="btn btn-primary my-2" @click="downloadCSV">CSV出力</button>
-                    <button class="btn btn-primary my-2" @click="closeModal(tableName+'-csv-download-modal')">閉じる</button>
-                </div>
-            </div>
-        </modal> -->
     </div>
 </template>
 
 <script>
+import CsvOutModal from './CsvOutModal.vue'
 export default {
+    components: { CsvOutModal },
     name: 'CsvList',
     props: ['title', 'tableName', 'accountId'],
     data: function() {
@@ -119,10 +101,18 @@ export default {
             csvOutputColumn: [],
             whereColumn: '',
             whereValue: '',
+            csvOutModal: false,
+            message: '',
         }
     },
     methods: {
-        showModal() {
+        openCsvOutModal() {
+            this.csvOutModal = true
+        },
+        closeCsvOutModal() {
+            this.csvOutModal = false
+        },
+        newRegist() {
             this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: -1, title: this.title}});
         },
         search() {
@@ -198,29 +188,6 @@ export default {
             //         console.log(error);
             //     })
                 this.$modal.hide(this.tableName + '-csv-modal');
-        },
-        downloadCSV() {
-            let params = new URLSearchParams();
-            params.append('tableName', this.tableName);
-            params.append('csvHeadType', this.csvHeadType);
-            params.append('csvOutputColumn', this.csvOutputColumn);
-            // axios.post('./getCSV', params)
-            // .then(res => {
-            //     let csv = res.data
-            //     let blob = new Blob([csv], { type: 'text/csv' })
-            //     let link = document.createElement('a')
-            //     link.href = window.URL.createObjectURL(blob)
-            //     link.download = this.tableName + '.csv'
-            //     link.click()
-            // })
-            // .catch(error => { console.log(error) })
-            fetch('http://localhost:8888/axiz-php/getCsv', {
-                method:'post',
-                body:params
-            })
-            .then() // TODO
-            .catch(error => { console.log(error) })
-            this.$modal.hide(this.tableName+'-csv-download-modal');
         },
         init() {
             this.search();

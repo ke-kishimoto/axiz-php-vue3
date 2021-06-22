@@ -123,6 +123,7 @@ export default {
         view(data) {
             this.form = Object.assign({}, data);
             this.$modal.show('view-' + this.tableName);
+            // this.$router.push({name:'viewModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
         },
         clearForm() {
             Object.keys(this.form).forEach(key => {
