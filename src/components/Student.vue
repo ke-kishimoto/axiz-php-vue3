@@ -10,7 +10,7 @@
                 <a href="./logout">ログアウト</a><br>
             </div> -->
         </header>
-        <div id="app">
+        <div class="content">
             <ul class="nav">
                 <!-- <li>
                     <router-link>テキスト</router-link>
@@ -39,8 +39,8 @@ ul.nav {
 main {
     /* width: 75%; */
 }
-#app {
+/* #app {
     width: 100%;
     display: flex;
-}
+} */
 </style>

@@ -10,7 +10,7 @@
             
         </header>
 
-        <div id="app" v-cloak>
+        <div class="content" v-cloak>
             <ul class="nav">
                 <li>
                     <router-link to="/teacher/document">ドキュメント</router-link>
@@ -75,7 +75,7 @@ export default {
     },    
 }
 </script>
-<style>
+<style scoped>
 h1 {
     margin: 0;
 }
@@ -83,13 +83,15 @@ ul.nav {
     list-style: none;
     margin: 0;
     padding: 0;
-    width: 25%;
+    /* width: 25%; */
+    width: 200px;
 }
 main {
     /* width: 75%; */
+    width: 1300px;
 }
-#app {
-    width: 100%;
+.content {
+    /* width: 100%; */
     display: flex;
 }
 </style>

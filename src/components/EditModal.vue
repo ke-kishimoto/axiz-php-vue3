@@ -1,25 +1,24 @@
 <template>
-    <div>
-        <div>
-            <h2 v-if="createFlg">{{ title }}登録</h2>
+    <div id="top">
+        <div class="head">
+            <h2 v-if="editId == -1">{{ title }}登録</h2>
             <h2 v-else>{{ title }}更新</h2>
             <button type="button" @click="goback()">戻る</button>
         </div>
-
         <div>
             <div v-for="column in columnList" v-bind:key="column.column_name">
                 <template v-if="column.column_name !== 'id' && column.column_name !== 'account_id' && column.column_name !== 'account_name'" >
-                    <label v-bind:for="column.column_name">{{column.column_comment}}</label>
-                    <input v-if="column.input_type === 'text'" :list="column.column_name" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length">
+                    <!-- <label v-bind:for="column.column_name">{{column.column_comment}}</label> -->
+                    <input type="text" v-if="column.input_type === 'text'" :list="column.column_name" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment">
                     <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
                         <option v-for="category in categoryList[column.column_name]" v-bind:key="category.category_value" :value="category['category_value']"></option>
                     </datalist>
-                    <textarea v-if="column.input_type === 'textarea'"  v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7"></textarea>
+                    <textarea v-if="column.input_type === 'textarea'"  v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7" v-bind:placeholder="column.column_comment"></textarea>
                 </template>
             </div>
             <div class="modal-btn">
                 <div>
-                    <button v-if="createFlg" @click="register">登録</button>
+                    <button v-if="editId == -1" @click="register">登録</button>
                     <div v-else>
                         <button @click="register">更新</button>
                         <button @click="deleteRecord">削除</button>
@@ -36,7 +35,6 @@ export default {
     // props: ['tableName', 'editId'],
     data: function() {
         return {
-            createFlg: false,
             tableName: '',
             editId: -1,
             columnList: [],
@@ -103,7 +101,6 @@ export default {
         },
         selectById() {
             if(this.editId === -1) {
-                this.createFlg = true
                 return
             }
             let params = new URLSearchParams();
@@ -146,3 +143,25 @@ export default {
     },
 }
 </script>
+<style scoped>
+#top {
+    max-width: 900px;
+    /* margin-left: 100px; */
+    margin: 20px auto;
+}
+#top div.head {
+    /* height: 50px; */
+    /* display: flex; */
+}
+
+input,textarea {
+    width: 600px;
+    font-size: 18px;
+    margin:15px 0;
+}
+input[type="text"] {
+    
+    border-width: 0 0 1px 0;
+
+}
+</style>

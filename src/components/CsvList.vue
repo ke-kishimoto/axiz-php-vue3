@@ -3,15 +3,15 @@
         <div class="head">
             <div>
                 <button class="btn btn-primary my-2" @click="newRegist">登録</button>
-                <button class="btn btn-primary my-2" @click="a">CSV取込</button>
+                <button class="btn btn-primary my-2" @click="openCsvUpModal">CSV取込</button>
                 <button class="btn btn-primary my-2" @click="openCsvOutModal">CSV出力</button>
             </div>
             <div class="search">
-            <select v-model="whereColumn">
-                <option value="">絞り込み項目</option>
-                <option v-for="column in columnList" v-bind:key="column.column_name" v-bind:value="column.column_name">{{ column.column_comment }}</option>
-            </select>
-            <input type="text" v-model="whereValue">
+                <select v-model="whereColumn">
+                    <option value="">絞り込み項目</option>
+                    <option v-for="column in columnList" v-bind:key="column.column_name" v-bind:value="column.column_name">{{ column.column_comment }}</option>
+                </select>
+                <input type="text" v-model="whereValue">
                 <select v-model="order">
                     <option value="">並び替え項目</option>
                     <option v-for="column in columnList" v-bind:key="column.column_name" v-bind:value="column.column_name">{{ column.column_comment }}</option>
@@ -28,7 +28,7 @@
         </div>
         <span>{{ msg }}</span>
         <!-- 一覧表 -->
-        <table class="table table-bordered">
+        <table class="table">
             <tr>
                 <th>削除</th>
                 <th>更新</th>
@@ -56,7 +56,7 @@
                 </td>
             </tr>
         </table>
-         <!-- コンポーネント OutCsvModal -->
+        <!-- Csv出力用 -->
         <CsvOutModal @close="closeCsvOutModal" v-if="csvOutModal">
             <template v-slot:columnList>
                 <div v-for="column in columnList" v-bind:key="column.column_name" class="form-check">
@@ -67,24 +67,17 @@
                 </div>
             </template>
         </CsvOutModal>
-        <!-- CSV取込用 モーダルウィンドウ -->
-        <!-- <modal :name="tableName+'-csv-modal'" :scrollable="true" height="auto">
-            <div class="container">
-                <h2>CSV取込</h2>
-                <input type="file" name="fname" @change="selectedFile">
-                <div class="modal-btn">
-                    <button class="btn btn-primary my-2" @click="upload">CSV取込</button>
-                    <button class="btn btn-primary my-2" @click="closeModal(tableName+'-csv-modal')">閉じる</button>
-                </div>
-            </div>
-        </modal> -->
+        <!-- CSV取込用 -->
+        <CsvUpModal @close="closeCsvUpModal" v-if="csvUpModal">
+        </CsvUpModal>
     </div>
 </template>
 
 <script>
 import CsvOutModal from './CsvOutModal.vue'
+import CsvUpModal from './CsvUpModal.vue'
 export default {
-    components: { CsvOutModal },
+    components: { CsvOutModal, CsvUpModal },
     name: 'CsvList',
     props: ['title', 'tableName', 'accountId'],
     data: function() {
@@ -96,12 +89,12 @@ export default {
             orderOption: '',
             idList: [],
             msg: '',
-            uploadFile: null,
             csvHeadType: 'disp',
             csvOutputColumn: [],
             whereColumn: '',
             whereValue: '',
             csvOutModal: false,
+            csvUpModal: false,
             message: '',
         }
     },
@@ -111,6 +104,12 @@ export default {
         },
         closeCsvOutModal() {
             this.csvOutModal = false
+        },
+        openCsvUpModal() {
+            this.csvUpModal = true
+        },
+        closeCsvUpModal() {
+            this.csvUpModal = false
         },
         newRegist() {
             this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: -1, title: this.title}});
@@ -155,40 +154,7 @@ export default {
             .then(() => this.search())
             .catch(errors => console.log(errors))
         },
-        selectedFile: function(e) {
-            // 選択された File の情報を保存しておく
-            e.preventDefault();
-            let files = e.target.files;
-            this.uploadFile = files[0];
-        },
-        upload: function() {
-            // FormData を利用して File を POST する
-            let formData = new FormData();
-            formData.append('csvfile', this.uploadFile);
-            formData.append('tableName', this.tableName);
-            // let config = {
-            //     headers: {
-            //         'content-type': 'multipart/form-data'
-            //     }
-            // };
-            // axios
-            //     .post('./uploadCSV', formData, config)
-            //     .then(res => {
-            //         if(res.status !== 200) {
-            //             console.log(res.data);
-            //         } else if(res.data.err_msg !== '') {
-            //             this.msg = res.data.err_msg
-            //         } else {
-            //             this.msg = res.data.cnt + '件登録';
-            //             this.search();
-            //         }
-            //         this.uploadFile = null;
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     })
-                this.$modal.hide(this.tableName + '-csv-modal');
-        },
+        
         init() {
             this.search();
             let params = new URLSearchParams();
@@ -217,14 +183,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #top {
-    max-width: 900px;
+    /* max-width: 900px; */
+    /* margin: 20px auto; */
+    margin: 10px 100px;
 }
+
 div.head {
     width: 900px;
-    display: flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
 }
 table tr  {
     max-width: 900px;

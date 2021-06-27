@@ -10,7 +10,7 @@
                 <a href="./logout">ログアウト</a><br>
             </div>
         </header>
-        <div id="app" v-cloak>
+        <div class="content" v-cloak>
             <ul class="nav">
                 <li v-for="(table, index) in tableList" v-bind:key="'table-'+index">
                     <router-link v-bind:to="'/admin/' + table.table_name">{{ table.table_comment }}</router-link>
@@ -53,7 +53,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 h1 {
     margin: 0;
 }
@@ -66,8 +66,8 @@ ul.nav {
 main {
     /* width: 75%; */
 }
-#app {
+/* #app {
     width: 100%;
     display: flex;
-}
+} */
 </style>

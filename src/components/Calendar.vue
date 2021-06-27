@@ -20,7 +20,7 @@
                 <th class="saturday">土</th>
             </tr>
             <tr v-for="(weekDay, index) in days" v-bind:key="index">
-                <td v-for="(day, index) in weekDay" v-bind:key="index"  @click="showModal(day)"> 
+                <td v-for="(day, index) in weekDay" v-bind:key="index"  @click="openEditModal()"> 
                     <div v-if="day !== ''" class="day">{{ day }}</div>
                     <div v-if="day !== ''" class="day-data">
                         <div v-for="(s, index) in calData[day]" v-bind:key="index" class="cal-data"> 
@@ -32,6 +32,8 @@
                 </td>
             </tr>
         </table>
+        <EditModal @close="closeEditModal" v-if="editModal">
+        </EditModal>
         <!-- <modal v-bind:name="tableName" :scrollable="true" height="auto">
             <div class="container">
                 <div class="card">
@@ -104,16 +106,23 @@ export default {
             calDataList: [],
             lastDate: -1,
             calData: {},
+            editModal: false,
         }
     },
     methods: {
-        showModal(date) {
-            if (date === '') return;
-            this.createFlg = true;
-            this.date = date;
-            this.clearForm();
-            this.$modal.show(this.tableName);
+        openEditModal() {
+            this.editModal = true
         },
+        closeEditModal() {
+            this.editModal = false
+        },
+        // showModal(date) {
+        //     if (date === '') return;
+        //     this.createFlg = true;
+        //     this.date = date;
+        //     this.clearForm();
+        //     this.$modal.show(this.tableName);
+        // },
         edit(data) {
             this.createFlg = false;
             this.date = data.day;
@@ -153,11 +162,6 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('month', this.month);
-            // axios.post('./getCalData', params)
-            // .then(res => {
-            //     this.calDataList = res.data;
-            //     this.createCalData();
-            // })
             fetch('http://localhost:8888/axiz-php/getCalData', {
                 method: 'post',
                 body: params
@@ -183,11 +187,6 @@ export default {
                 }
             })
             params.append('account_id', this.accountId);
-            // axios.post('./updateRecord', params)
-            // .then(res => {
-            //     this.getCalData();
-            // })
-            // .catch(errors => console.log(errors))
             fetch('http://localhost:8888/axiz-php/updateRecord', {
                 method: 'post',
                 body: params
@@ -203,9 +202,6 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('id', this.form.id);
-            // axios.post('./deleteById', params)
-            // .then(res => this.getCalData())
-            // .catch(errors => console.log(errors))
             fetch('http://localhost:8888/axiz-php/deleteById', {
                 method: 'post',
                 body: params
@@ -269,14 +265,6 @@ export default {
             // カラムの取得
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
-            // axios.post('./getColumnList', params)
-            // .then(res => {
-            //     this.columnList = res.data;
-            //     this.columnNum = res.data.length;
-            //     res.data.forEach(element => {
-            //         this.form[element['column_name']] = '';
-            //     })
-            // })
             fetch('http://localhost:8888/axiz-php/getColumnList', {
                 method:'post',
                 body: params
@@ -304,11 +292,11 @@ export default {
 
 }
 </script>
-<style>
+<style scoped>
 @import url(https://use.fontawesome.com/releases/v5.6.1/css/all.css);
-#top {
+/* #top {
     width: 80%;
-}
+} */
 
 table.calendar {
     width: 100%;
