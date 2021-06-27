@@ -20,7 +20,7 @@
                 <th class="saturday">土</th>
             </tr>
             <tr v-for="(weekDay, index) in days" v-bind:key="index">
-                <td v-for="(day, index) in weekDay" v-bind:key="index"  @click="openEditModal()"> 
+                <td v-for="(day, index) in weekDay" v-bind:key="index"  @click="openCalendarModal(day)"> 
                     <div v-if="day !== ''" class="day">{{ day }}</div>
                     <div v-if="day !== ''" class="day-data">
                         <div v-for="(s, index) in calData[day]" v-bind:key="index" class="cal-data"> 
@@ -32,8 +32,33 @@
                 </td>
             </tr>
         </table>
-        <EditModal @close="closeEditModal" v-if="editModal">
-        </EditModal>
+        <CalendarModal @close="closeCalendarModal" v-if="calendarModal">
+            <template v-slot:body>
+                <div>
+                    <h2 v-if="createFlg">{{ tableComment }}登録</h2>
+                    <h2 v-else>{{ tableComment }}更新</h2>
+                </div>
+                <div>
+                    <div v-for="(column, index) in columnList" v-bind:key="index" class="form-group">
+                        <div v-if="column.column_name !== 'id' && column.column_name !== 'year' && column.column_name !== 'month' && column.column_name !== 'day' && column.column_name !== 'account_name'">
+                            <!-- <label v-bind:for="column.column_name">{{column.column_comment}}</label> -->
+                            <input v-if="column.input_type === 'text'" :list="column.column_name" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment">
+                            <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
+                                <option v-for="(category, index) in categoryList[column.column_name]" v-bind:key="index" :value="category['category_value']"></option>
+                            </datalist>
+                            <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7" v-bind:placeholder="column.column_comment"></textarea>
+                        </div>
+                    </div>
+                    <div >
+                        <button v-if="createFlg" class="btn btn-primary" @click="register('insert')">登録</button>
+                        <div v-else>
+                            <button class="btn btn-primary" @click="register('update')">更新</button>
+                            <button class="btn btn-danger" @click="deleteCalData()">削除</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </CalendarModal>
         <!-- <modal v-bind:name="tableName" :scrollable="true" height="auto">
             <div class="container">
                 <div class="card">
@@ -89,7 +114,9 @@
     </div>
 </template>
 <script>
+import CalendarModal from './CalendarModal.vue'
 export default {
+    components: { CalendarModal },
     props: ['tableComment', 'tableName', 'accountId'],
     data: function() {
         return {
@@ -106,15 +133,17 @@ export default {
             calDataList: [],
             lastDate: -1,
             calData: {},
-            editModal: false,
+            calendarModal: false,
         }
     },
     methods: {
-        openEditModal() {
-            this.editModal = true
+        openCalendarModal(date) {
+            this.createFlg = true;
+            this.date = date;
+            this.calendarModal = true
         },
-        closeEditModal() {
-            this.editModal = false
+        closeCalendarModal() {
+            this.calendarModal = false
         },
         // showModal(date) {
         //     if (date === '') return;
@@ -127,7 +156,8 @@ export default {
             this.createFlg = false;
             this.date = data.day;
             this.form = Object.assign({}, data);
-            this.$modal.show(this.tableName);
+            this.createFlg = false;
+            this.calendarModal = true
         },
         view(data) {
             this.form = Object.assign({}, data);
@@ -191,10 +221,17 @@ export default {
                 method: 'post',
                 body: params
             })
-            .then(res => res.json().then(() => this.getCalData()))
+            .then(res => {
+                if(res.status !== 200) {
+                    console.log(res);
+                } else {
+                    res.json().then(() => this.getCalData())
+                }
+            })
             .catch(errors => console.log(errors))
             this.clearForm();
-            this.$modal.hide(this.tableName);
+            this.closeCalendarModal();
+            // this.$modal.hide(this.tableName);
         },
         deleteCalData() {
             const ans = confirm('削除してよろしいですか');

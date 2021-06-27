@@ -185,24 +185,14 @@ export default {
 
 <style scoped>
 #top {
-    /* max-width: 900px; */
-    /* margin: 20px auto; */
     margin: 10px 100px;
 }
 
-div.head {
-    width: 900px;
-    /* display: flex;
-    justify-content: space-between; */
-}
-table tr  {
-    max-width: 900px;
-}
+
 table tr th {
     min-width: 50px;
 }
 table tr td pre {
     white-space: pre-wrap;
-    /* flex-wrap: wrap; */
 }
 </style>

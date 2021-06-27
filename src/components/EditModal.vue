@@ -13,7 +13,10 @@
                     <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
                         <option v-for="category in categoryList[column.column_name]" v-bind:key="category.category_value" :value="category['category_value']"></option>
                     </datalist>
-                    <textarea v-if="column.input_type === 'textarea'"  v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7" v-bind:placeholder="column.column_comment"></textarea>
+                    <p v-if="column.input_type === 'textarea'">
+                        <label v-bind:for="column.column_name">{{column.column_comment}}</label>
+                    </p>
+                    <textarea v-if="column.input_type === 'textarea'"  v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7"></textarea>
                 </template>
             </div>
             <div class="modal-btn">
@@ -32,7 +35,6 @@
 <script>
 export default {
     name: 'editModal',
-    // props: ['tableName', 'editId'],
     data: function() {
         return {
             tableName: '',
@@ -145,22 +147,16 @@ export default {
 </script>
 <style scoped>
 #top {
-    max-width: 900px;
-    /* margin-left: 100px; */
+    /* max-width: 900px; */
     margin: 20px auto;
-}
-#top div.head {
-    /* height: 50px; */
-    /* display: flex; */
 }
 
 input,textarea {
     width: 600px;
     font-size: 18px;
-    margin:15px 0;
 }
 input[type="text"] {
-    
+    margin:15px 0;
     border-width: 0 0 1px 0;
 
 }
