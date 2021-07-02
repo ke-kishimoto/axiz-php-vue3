@@ -38,6 +38,7 @@ export default {
             selectList:[],
             columnList: [],
             dataList: [],
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -45,7 +46,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.selectTableName);
             params.append('accountId', this.accountId);
-            fetch('http://localhost:8888/axiz-php/getSelectboxList', {
+            fetch(this.urlPrefix + '/getSelectboxList', {
                 method: 'post',
                 body: params
             })
@@ -67,7 +68,7 @@ export default {
             let params = new URLSearchParams();
             params.append('id', data.id);
             params.append('tableName', this.listTableName);
-            fetch('http://localhost:8888/axiz-php/updateFlg', {
+            fetch(this.urlPrefix + '/updateFlg', {
                 method: 'post',
                 body: params
             })
@@ -78,7 +79,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.listTableName);
             params.append('id', selectId);
-            fetch('http://localhost:8888/axiz-php/getSwitchList', {
+            fetch(this.urlPrefix + '/getSwitchList', {
                 method: 'post',
                 body: params
             })
@@ -95,7 +96,7 @@ export default {
         init() {
             let params = new URLSearchParams();
             params.append('tableName', this.listTableName);
-            fetch('http://localhost:8888/axiz-php/getSwitchColumnList', {
+            fetch(this.urlPrefix + '/getSwitchColumnList', {
                 method: 'post',
                 body: params
             })

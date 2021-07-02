@@ -134,6 +134,7 @@ export default {
             lastDate: -1,
             calData: {},
             calendarModal: false,
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -192,7 +193,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('month', this.month);
-            fetch('http://localhost:8888/axiz-php/getCalData', {
+            fetch(this.urlPrefix + '/getCalData', {
                 method: 'post',
                 body: params
             })
@@ -217,7 +218,7 @@ export default {
                 }
             })
             params.append('account_id', this.accountId);
-            fetch('http://localhost:8888/axiz-php/updateRecord', {
+            fetch(this.urlPrefix + '/updateRecord', {
                 method: 'post',
                 body: params
             })
@@ -239,7 +240,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('id', this.form.id);
-            fetch('http://localhost:8888/axiz-php/deleteById', {
+            fetch(this.urlPrefix + '/deleteById', {
                 method: 'post',
                 body: params
             })
@@ -302,7 +303,7 @@ export default {
             // カラムの取得
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
-            fetch('http://localhost:8888/axiz-php/getColumnList', {
+            fetch(this.urlPrefix + '/getColumnList', {
                 method:'post',
                 body: params
             })

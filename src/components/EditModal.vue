@@ -44,6 +44,7 @@ export default {
             form: {
                 id: '',
             },
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -53,7 +54,7 @@ export default {
         getCategoryList() {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
-            fetch('http://localhost:8888/axiz-php/getCategoryList', {
+            fetch(this.urlPrefix + '/getCategoryList', {
                 method:'post',
                 body:params
             })
@@ -73,7 +74,7 @@ export default {
                     params.append(key, this.form[key]);
                 }
             })
-            fetch('http://localhost:8888/axiz-php/updateRecord', {
+            fetch(this.urlPrefix + '/updateRecord', {
                 method:'post',
                 body:params, 
                 credentials: 'include',
@@ -92,7 +93,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('id', this.form.id);
-            fetch('http://localhost:8888/axiz-php/deleteById', {
+            fetch(this.urlPrefix + '/deleteById', {
                 method:'post',
                 body:params, 
             })
@@ -108,7 +109,7 @@ export default {
             let params = new URLSearchParams();
             params.append('id', this.editId);
             params.append('tableName', this.tableName);
-            fetch('http://localhost:8888/axiz-php/selectById', {
+            fetch(this.urlPrefix + '/selectById', {
                  method:'post',
                 body: params,
                 credentials: 'include',
@@ -125,7 +126,7 @@ export default {
         this.title = this.$route.query.title;
         let params = new URLSearchParams();
         params.append('tableName', this.tableName);
-        fetch('http://localhost:8888/axiz-php/getColumnList', {
+        fetch(this.urlPrefix + '/getColumnList', {
             method:'post',
             body: params,
         })

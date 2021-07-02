@@ -24,6 +24,7 @@ export default {
         return  {
             tableDefList: [],       
             tableCheckList: [],
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -42,7 +43,7 @@ export default {
             //         alert('正常に完了しました。');
             //     }
             // });
-            fetch('http://localhost:8888/axiz-php/createTable', {
+            fetch(this.urlPrefix + '/createTable', {
                 method: 'post',
                 body: params
             })
@@ -70,7 +71,7 @@ export default {
             //         alert('正常に完了しました。');
             //     }
             // });
-            fetch('http://localhost:8888/axiz-php/deleteTables', {
+            fetch(this.urlPrefix + '/deleteTables', {
                 method: 'post',
                 body: params
             })
@@ -85,7 +86,7 @@ export default {
         }
     },
     created: function() {
-        fetch('http://localhost:8888/axiz-php/getTableList', {
+        fetch(this.urlPrefix + '/getTableList', {
             method: 'post',
         })
         .then(res => res.json().then(json => this.tableDefList = json))

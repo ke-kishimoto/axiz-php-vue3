@@ -96,6 +96,7 @@ export default {
             csvOutModal: false,
             csvUpModal: false,
             message: '',
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -122,7 +123,7 @@ export default {
             params.append('keyword', this.keyword);
             let order = this.order !== '' ? this.order + ' ' + this.orderOption : '';
             params.append('order', order);
-            fetch('http://localhost:8888/axiz-php/searchList', {
+            fetch(this.urlPrefix + '/searchList', {
                 method: 'post',
                 body: params
             }).then(res => {
@@ -147,7 +148,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
             params.append('idList', this.idList);
-            fetch('http://localhost:8888/axiz-php/bulkDelete', {
+            fetch(this.urlPrefix + '/bulkDelete', {
                 method:'post',
                 body:params
             })
@@ -159,7 +160,7 @@ export default {
             this.search();
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
-            fetch('http://localhost:8888/axiz-php/getColumnList', {
+            fetch(this.urlPrefix + '/getColumnList', {
                 method:'post',
                 body: params
             })

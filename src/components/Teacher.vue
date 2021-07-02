@@ -43,6 +43,7 @@ export default {
         return {
             tableList: [],
             calendarList: [],
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: { 
@@ -50,7 +51,7 @@ export default {
             let params = new URLSearchParams();
             params.append('account_level', 2);
             params.append('type', 1); // マスタ
-            fetch('http://localhost:8888/axiz-php/getUseTableList', {
+            fetch(this.urlPrefix + '/getUseTableList', {
                 method: 'post',
                 body: params,
             })
@@ -61,7 +62,7 @@ export default {
             params = new URLSearchParams();
             params.append('account_level', 2);
             params.append('type', 2); // カレンダー
-            fetch('http://localhost:8888/axiz-php/getUseTableList', {
+            fetch(this.urlPrefix + '/getUseTableList', {
                 method: 'post',
                 body: params,
             })

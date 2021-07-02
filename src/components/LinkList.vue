@@ -27,6 +27,7 @@ export default {
             // subjectList: [],
             displayList: {},
             answerList: [],
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -34,7 +35,7 @@ export default {
             let params = new URLSearchParams();
             params.append('tableName', this.selectTableName);
             params.append('accountId', this.accountId);
-            fetch('http://localhost:8888/axiz-php/getSelectboxList', {
+            fetch(this.urlPrefix + '/getSelectboxList', {
                 method: 'post',
                 body: params,
                 credentials: 'include',
@@ -67,7 +68,7 @@ export default {
         getItemList(targetId) {
             let params = new URLSearchParams();
             params.append('room_id', targetId);
-            fetch('http://localhost:8888/axiz-php/searchModelAnswer', {
+            fetch(this.urlPrefix + '/searchModelAnswer', {
                 method: 'post',
                 body: params,
                 credentials: 'include',

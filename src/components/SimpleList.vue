@@ -116,6 +116,7 @@ export default {
             errMsg: '',
             whereColumn: '',
             whereValue: '',
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -178,7 +179,7 @@ export default {
             //         this.list = res.data;
             //     }
             // })
-            fetch('http://localhost:8888/axiz-php/searchList', {
+            fetch(this.urlPrefix + '/searchList', {
                 method: 'post',
                 body: params
             }).then(res => {
@@ -237,7 +238,7 @@ export default {
             params.append('idList', this.idList);
             // axios.post('./bulkDelete', params)
             // .then(res => this.search())
-            fetch('http://localhost:8888/axiz-php', {
+            fetch(this.urlPrefix + '/bulkDelete', {
                 method: 'post',
                 body: params
             })
@@ -258,7 +259,7 @@ export default {
             //         }
             //     })
             // });
-            fetch('http://localhost:8888/axiz-php/getColumnList', {
+            fetch(this.urlPrefix + '/getColumnList', {
                 method: 'post',
                 body: params
             })

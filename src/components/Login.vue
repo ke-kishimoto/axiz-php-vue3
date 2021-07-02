@@ -33,6 +33,7 @@ export default {
             id: '',
             password: '',
             userType: 'student',
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -40,7 +41,7 @@ export default {
             let params = new URLSearchParams();
             params.append('id', this.id);
             params.append('password', this.password);
-            fetch('http://localhost:8888/axiz-php/login2', {
+            fetch(this.urlPrefix + '/login2', {
                 method: 'POST',
                 body: params,
                 credentials: 'include',

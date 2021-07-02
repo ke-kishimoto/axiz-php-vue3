@@ -49,6 +49,7 @@ export default {
     data: function () {
         return {
             csvHeadType: 'disp',
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -67,7 +68,7 @@ export default {
             //     link.click()
             // })
             // .catch(error => { console.log(error) })
-            fetch('http://localhost:8888/axiz-php/getCSV', {
+            fetch(this.urlPrefix + '/getCSV', {
                 method:'post',
                 body:params
             })
