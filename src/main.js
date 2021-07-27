@@ -36,7 +36,7 @@ const routes = [
         ]
     },
     {
-        path: '/teacher/:accountId',
+        path: '/teacher/:accountId/',
         name: 'teacher',
         component: Teacher,
         children: [
@@ -92,17 +92,22 @@ const routes = [
                 component: CsvList,
                 props:{title: '報告書コメント', tableName: 'ReportComment'}
             },
+            // {
+            //     path: 'dayoverview',
+            //     name: 'DayOverview',
+            //     component: Calendar,
+            //     props:{title: '1日の概要', tableName: 'DayOverview'}
+            // },
+            // {
+            //     path: 'statusreport',
+            //     name: 'StatusReport',
+            //     component: Calendar,
+            //     props:{title: '講師状況報告書', tableName: 'StatusReport'}
+            // },
             {
-                path: 'dayoverview',
-                name: 'DayOverview',
+                path: 'calendar/:tableName',
+                name: 'calendar/:tableName',
                 component: Calendar,
-                props:{title: '1日の概要', tableName: 'DayOverview'}
-            },
-            {
-                path: 'statusreport',
-                name: 'StatusReport',
-                component: Calendar,
-                props:{title: '講師状況報告書', tableName: 'StatusReport'}
             },
           ]
       },

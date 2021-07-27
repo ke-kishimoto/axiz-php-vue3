@@ -68,9 +68,11 @@
 import CalendarModal from './CalendarModal.vue'
 export default {
     components: { CalendarModal },
-    props: ['tableComment', 'tableName'],
+    // props: ['tableComment', 'tableName'],
     data: function() {
         return {
+            tableComment: 'カレンダー',
+            tableName: '',
             columnNum: 0,
             columnList: [],
             year: '',
@@ -239,6 +241,8 @@ export default {
             this.days.push(weekDay);
         },
         init() {
+            this.tableName = this.$route.params.tableName
+            this.accountId = this.$route.params.accountId
             const today = new Date(); // 現在の日時
             this.year = today.getFullYear();
             this.month = today.getMonth() + 1;
@@ -266,12 +270,14 @@ export default {
     },
     created: function () {
         this.init()
-        this.accountId = this.$route.params.accountId
     },
     watch: {
-        tableName() {
+        $route() {
             this.init()
         }
+        // tableName() {
+        //     this.init()
+        // }
     }
 
 }
