@@ -35,24 +35,26 @@
         <CalendarModal @close="closeCalendarModal" v-if="calendarModal">
             <template v-slot:body>
                 <div>
-                    <h2 v-if="createFlg">{{ tableComment }}登録</h2>
-                    <h2 v-else>{{ tableComment }}更新</h2>
+                    <h2 v-if="modalStatus === 'create'">{{ tableComment }}登録</h2>
+                    <h2 v-else-if="modalStatus === 'edit'">{{ tableComment }}更新</h2>
+                    <h2 v-else>{{ tableComment }}参照</h2>
                 </div>
                 <div>
                     <div v-for="(column, index) in columnList" v-bind:key="index" class="form-group">
                         <div v-if="column.column_name !== 'id' && column.column_name !== 'year' && column.column_name !== 'month' && column.column_name !== 'day' && column.column_name !== 'account_name'">
                             <label v-bind:for="column.column_name">{{column.column_comment}}</label><br>
-                            <input v-if="column.input_type === 'text'" :list="column.column_name" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment">
+                            <input v-if="column.input_type === 'text'" :list="column.column_name" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment" :readonly="modalStatus === 'view'">
                             <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
                                 <option v-for="(category, index) in categoryList[column.column_name]" v-bind:key="index" :value="category['category_value']"></option>
                             </datalist>
-                            <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="10" v-bind:placeholder="column.column_comment"></textarea>
+                            <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="10" v-bind:placeholder="column.column_comment" :readonly="modalStatus === 'view'">
+                            </textarea>
                             <br>
                         </div>
                     </div>
                     <div >
-                        <button v-if="createFlg" class="btn btn-primary" @click="register('insert')">登録</button>
-                        <div v-else>
+                        <button v-if="modalStatus === 'create'" class="btn btn-primary" @click="register('insert')">登録</button>
+                        <div v-else-if="modalStatus === 'edit'">
                             <button class="btn btn-primary" @click="register('update')">更新</button>
                             <button class="btn btn-danger" @click="deleteCalData()">削除</button>
                         </div>
@@ -60,58 +62,6 @@
                 </div>
             </template>
         </CalendarModal>
-        <!-- <modal v-bind:name="tableName" :scrollable="true" height="auto">
-            <div class="container">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title">
-                            <h2 v-if="createFlg">{{ tableComment }}登録</h2>
-                            <h2 v-else>{{ tableComment }}更新</h2>
-                        </div>
-                        <div class="card-text">
-                            <div v-for="(column, index) in columnList" v-bind:key="index" class="form-group">
-                                <div v-if="column.column_name !== 'id' && column.column_name !== 'year' && column.column_name !== 'month' && column.column_name !== 'day' && column.column_name !== 'account_name'">
-                                    <label v-bind:for="column.column_name">{{column.column_comment}}</label>
-                                    <input v-if="column.input_type === 'text'" :list="column.column_name" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length">
-                                    <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
-                                        <option v-for="(category, index) in categoryList[column.column_name]" v-bind:key="index" :value="category['category_value']"></option>
-                                    </datalist>
-                                    <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7"></textarea>
-                                </div>
-                            </div>
-                            <div >
-                                <button v-if="createFlg" class="btn btn-primary" @click="register('insert')">登録</button>
-                                <div v-else>
-                                    <button class="btn btn-primary" @click="register('update')">更新</button>
-                                    <button class="btn btn-danger" @click="deleteCalData()">削除</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
-        <!-- <modal v-bind:name="'view-'+tableName" :scrollable="true" height="auto">
-            <div class="container">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title">
-                            <h2>{{ tableComment }}</h2>
-                        </div>
-                        <div class="card-text">
-                            <div v-for="(column, index) in columnList" v-bind:key="index" class="form-group">
-                                <div v-if="column.column_name !== 'id' && column.column_name !== 'year' && column.column_name !== 'month' && column.column_name !== 'day'">
-                                    <span class="text-muted">{{ column.column_comment }}</span>
-                                    <p>
-                                        <pre>{{ form[column.column_name] }}</pre>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </modal> -->
     </div>
 </template>
 <script>
@@ -130,7 +80,7 @@ export default {
             form: {
                 id: '',
             },
-            createFlg: false,
+            modalStatus: "create",
             calDataList: [],
             lastDate: -1,
             calData: {},
@@ -141,7 +91,7 @@ export default {
     },
     methods: {
         openCalendarModal(date) {
-            this.createFlg = true
+            this.modalStatus = "create"
             this.date = date
             this.calendarModal = true
         },
@@ -149,24 +99,16 @@ export default {
             this.calendarModal = false
             this.clearForm()
         },
-        // showModal(date) {
-        //     if (date === '') return;
-        //     this.createFlg = true;
-        //     this.date = date;
-        //     this.clearForm();
-        //     this.$modal.show(this.tableName);
-        // },
         edit(data) {
-            this.createFlg = false;
+            this.modalStatus = "edit"
             this.date = data.day;
             this.form = Object.assign({}, data);
-            this.createFlg = false;
             this.calendarModal = true
         },
         view(data) {
+            this.modalStatus = "view"
             this.form = Object.assign({}, data);
-            this.$modal.show('view-' + this.tableName);
-            // this.$router.push({name:'viewModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
+            this.calendarModal = true
         },
         clearForm() {
             Object.keys(this.form).forEach(key => {
