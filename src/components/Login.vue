@@ -50,7 +50,8 @@ export default {
                 res.json()
                 .then(json => {
                     if (json['login'] === 'OK') {
-                        this.$router.push({name:this.userType});
+                        console.log('accountId:' + json['accountId']);
+                        this.$router.push({name:this.userType, params:{accountId:json['accountId']}});
                     } else {
                         console.log('ログインエラー');
                     }

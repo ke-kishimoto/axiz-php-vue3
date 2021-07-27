@@ -15,21 +15,21 @@
         <div class="content" v-cloak>
             <ul class="nav">
                 <li>
-                    <router-link to="/teacher/document">ドキュメント</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/document'">ドキュメント</router-link>
                 </li>
                 <li>
-                    <router-link to="/teacher/textdisp">教材管理</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/textdisp'">教材管理</router-link>
                 </li>
                 <li>
-                    <router-link to="/teacher/answer">模範解答</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/answer'">模範解答</router-link>
                 </li>
 
                 <li v-for="(table, index) in tableList" v-bind:key="'table-'+index" class="nav-item">
-                    <router-link v-bind:to="'/teacher/' + table.table_name">{{ table.table_comment }}</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/' + table.table_name">{{ table.table_comment }}</router-link>
                 </li>
 
                 <li v-for="(calendar, index) in calendarList" v-bind:key="'calendar'+index" class="nav-item">
-                    <router-link v-bind:to="'/teacher/' + calendar.table_name">{{ calendar.table_comment }}</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/' + calendar.table_name">{{ calendar.table_comment }}</router-link>
                 </li>
             </ul>
             <main>
@@ -46,6 +46,7 @@ export default {
             tableList: [],
             calendarList: [],
             urlPrefix : 'http://localhost:8888/axiz-php',
+            accountId: '',
         }
     },
     methods: { 
@@ -75,6 +76,7 @@ export default {
     },
     created: function() {
         this.getUseTableList();
+        this.accountId = this.$route.params.accountId
     },    
 }
 </script>

@@ -118,7 +118,7 @@
 import CalendarModal from './CalendarModal.vue'
 export default {
     components: { CalendarModal },
-    props: ['tableComment', 'tableName', 'accountId'],
+    props: ['tableComment', 'tableName'],
     data: function() {
         return {
             columnNum: 0,
@@ -136,16 +136,18 @@ export default {
             calData: {},
             calendarModal: false,
             urlPrefix : 'http://localhost:8888/axiz-php',
+            accountId: ''
         }
     },
     methods: {
         openCalendarModal(date) {
-            this.createFlg = true;
-            this.date = date;
+            this.createFlg = true
+            this.date = date
             this.calendarModal = true
         },
         closeCalendarModal() {
             this.calendarModal = false
+            this.clearForm()
         },
         // showModal(date) {
         //     if (date === '') return;
@@ -322,6 +324,7 @@ export default {
     },
     created: function () {
         this.init()
+        this.accountId = this.$route.params.accountId
     },
     watch: {
         tableName() {

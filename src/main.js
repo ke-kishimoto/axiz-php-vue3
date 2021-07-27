@@ -36,7 +36,7 @@ const routes = [
         ]
     },
     {
-        path: '/teacher',
+        path: '/teacher/:accountId',
         name: 'teacher',
         component: Teacher,
         children: [
@@ -61,48 +61,48 @@ const routes = [
             {
                 path: 'textdisp',
                 component: SwitchList,
-                props:{selectTableName: 'AccountRoom', listTableName: 'SubjectDisp', accountId: 1, flgName1: '表示', flgName2: '非表示'}
+                props:{selectTableName: 'AccountRoom', listTableName: 'SubjectDisp', flgName1: '表示', flgName2: '非表示'}
             },
             {
                 path: 'answer',
                 component: SwitchList,
-                props:{selectTableName: 'AccountRoom', listTableName: 'AnswerDisp', accountId: 1, flgName1: '表示', flgName2: '非表示'}
+                props:{selectTableName: 'AccountRoom', listTableName: 'AnswerDisp', flgName1: '表示', flgName2: '非表示'}
             },
             {
                 path: 'qa',
                 name: 'QA',
                 component: CsvList,
-                props:{title: 'QA', tableName: 'QA', accountId: 1}
+                props:{title: 'QA', tableName: 'QA'}
             },
             {
                 path: 'feedback',
                 name: 'Feedback',
                 component: CsvList,
-                props:{title: '研修フィードバック', tableName: 'Feedback', accountId: 1}
+                props:{title: '研修フィードバック', tableName: 'Feedback'}
             },
             {
                 path: 'review',
                 name: 'Review',
                 component: CsvList,
-                props:{title: 'レビュー', tableName: 'Review', accountId: 1}
+                props:{title: 'レビュー', tableName: 'Review'}
             },
             {
                 path: 'reportcomment',
                 name: 'ReportCooment',
                 component: CsvList,
-                props:{title: '報告書コメント', tableName: 'ReportComment', accountId: 1}
+                props:{title: '報告書コメント', tableName: 'ReportComment'}
             },
             {
                 path: 'dayoverview',
                 name: 'DayOverview',
                 component: Calendar,
-                props:{title: '1日の概要', tableName: 'DayOverview', accountId: 1}
+                props:{title: '1日の概要', tableName: 'DayOverview'}
             },
             {
                 path: 'statusreport',
                 name: 'StatusReport',
                 component: Calendar,
-                props:{title: '講師状況報告書', tableName: 'StatusReport', accountId: 1}
+                props:{title: '講師状況報告書', tableName: 'StatusReport'}
             },
           ]
       },
