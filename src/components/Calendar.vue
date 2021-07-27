@@ -4,8 +4,8 @@
             <tr>
                 <td class="calendar-head" colspan= 7>
                     <div class="month">
-                        <a href="#" @click="lastMonth()">&lt;</a>
-                        <a href="#" @click="nextMonth()">&gt;</a>
+                        <a href="#" @click="lastMonth()">&lt;</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="#" @click="nextMonth()">&gt;</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         {{ year }}年{{ month }}月
                     </div>
                 </td>
@@ -281,6 +281,16 @@ export default {
 /* #top {
     width: 80%;
 } */
+#top {
+    margin: 10px 50px;
+}
+.month {
+    line-height: 2em;
+    font-size: 18px;
+}
+.month a {
+    text-decoration: none;
+}
 
 table.calendar {
     width: 100%;
