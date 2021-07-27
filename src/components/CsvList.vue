@@ -50,7 +50,7 @@
                     <button v-else class="btn btn-secondary" @click="view(data)">参照</button>
                 </td>
                 <td v-for="column in columnList" v-bind:key="column.column_name">
-                    <template v-if="column.column_name !== 'id'">
+                    <template v-if="column.column_name !== 'id' && column.input_type !== 'textarea'">
                         <pre>{{ data[column.column_name] }}</pre>
                     </template>
                 </td>
@@ -79,9 +79,11 @@ import CsvUpModal from './CsvUpModal.vue'
 export default {
     components: { CsvOutModal, CsvUpModal },
     name: 'CsvList',
-    props: ['title', 'tableName', 'accountId'],
+    // props: ['title', 'tableName'],
     data: function() {
         return {
+            title: '',
+            tableName: '',
             columnList: [],
             list: [],
             keyword: '',
@@ -97,6 +99,7 @@ export default {
             csvUpModal: false,
             message: '',
             urlPrefix : 'http://localhost:8888/axiz-php',
+            accountId: ''
         }
     },
     methods: {
@@ -113,7 +116,7 @@ export default {
             this.csvUpModal = false
         },
         newRegist() {
-            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: -1, title: this.title}});
+            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: -1, title: this.title, readonlyFlg: false}});
         },
         search() {
             let params = new URLSearchParams();
@@ -137,10 +140,10 @@ export default {
         },
         
         edit(data) {
-            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
+            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: data.id, title: this.title, readonlyFlg: false}});
         },
         view(data) {
-            this.$router.push({name:'viewModal', query: {tableName: this.tableName, editId: data.id, title: this.title}});
+            this.$router.push({name:'editModal', query: {tableName: this.tableName, editId: data.id, title: this.title, readonlyFlg: true}});
         },
         bulkDelete() {
             const ans = confirm('削除してよろしいですか');
@@ -157,6 +160,8 @@ export default {
         },
         
         init() {
+            this.accountId = this.$route.params.accountId
+            this.tableName = this.$route.params.tableName
             this.search();
             let params = new URLSearchParams();
             params.append('tableName', this.tableName);
@@ -176,8 +181,11 @@ export default {
         this.init();
     },
     watch: {
-        tableName () {
-            // tableNameプロパティが変更された時の処理
+        // tableName () {
+        //     // tableNameプロパティが変更された時の処理
+        //     this.init();
+        // }
+        $route() {
             this.init();
         }
     }
@@ -186,9 +194,8 @@ export default {
 
 <style scoped>
 #top {
-    margin: 10px 100px;
+    margin: 10px 50px;
 }
-
 
 table tr th {
     min-width: 50px;

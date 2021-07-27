@@ -69,41 +69,11 @@ const routes = [
                 props:{selectTableName: 'AccountRoom', listTableName: 'AnswerDisp', flgName1: '表示', flgName2: '非表示'}
             },
             {
-                path: 'qa',
-                name: 'QA',
+                path: 'csvlist/:tableName',
+                name: 'csvlist/:tableName',
                 component: CsvList,
-                props:{title: 'QA', tableName: 'QA'}
             },
-            {
-                path: 'feedback',
-                name: 'Feedback',
-                component: CsvList,
-                props:{title: '研修フィードバック', tableName: 'Feedback'}
-            },
-            {
-                path: 'review',
-                name: 'Review',
-                component: CsvList,
-                props:{title: 'レビュー', tableName: 'Review'}
-            },
-            {
-                path: 'reportcomment',
-                name: 'ReportCooment',
-                component: CsvList,
-                props:{title: '報告書コメント', tableName: 'ReportComment'}
-            },
-            // {
-            //     path: 'dayoverview',
-            //     name: 'DayOverview',
-            //     component: Calendar,
-            //     props:{title: '1日の概要', tableName: 'DayOverview'}
-            // },
-            // {
-            //     path: 'statusreport',
-            //     name: 'StatusReport',
-            //     component: Calendar,
-            //     props:{title: '講師状況報告書', tableName: 'StatusReport'}
-            // },
+
             {
                 path: 'calendar/:tableName',
                 name: 'calendar/:tableName',

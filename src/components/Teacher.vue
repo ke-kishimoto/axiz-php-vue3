@@ -6,6 +6,7 @@
             </h1>
             <div>
                 <a href="./student" target="_blank">研修生ページ</a>
+                <a href="./teacher" target="_blank">研修生ページ</a>
                 <a href="./admin" target="_blank">管理者用ページ</a>
                 <a href="./logout">ログアウト</a><br>
             </div>
@@ -25,11 +26,11 @@
                 </li>
 
                 <li v-for="(table, index) in tableList" v-bind:key="'table-'+index" class="nav-item">
-                    <router-link v-bind:to="'/teacher/' + accountId + '/' + table.table_name">{{ table.table_comment }}</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/csvlist/' + table.table_name">{{ table.table_comment }}</router-link>
                 </li>
 
                 <li v-for="(calendar, index) in calendarList" v-bind:key="'calendar'+index" class="nav-item">
-                    <router-link v-bind:to="'/teacher/' + accountId + '/' + calendar.table_name">{{ calendar.table_comment }}</router-link>
+                    <router-link v-bind:to="'/teacher/' + accountId + '/calendar/' + calendar.table_name">{{ calendar.table_comment }}</router-link>
                 </li>
             </ul>
             <main>

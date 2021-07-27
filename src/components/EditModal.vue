@@ -1,7 +1,8 @@
 <template>
     <div id="top">
         <div class="head">
-            <h2 v-if="editId == -1">{{ title }}登録</h2>
+            <h2 v-if="editId == -1 ">{{ title }}登録</h2>
+            <h2 v-else-if="accountId !== form['account_id']">{{ title }}参照</h2>
             <h2 v-else>{{ title }}更新</h2>
             <button type="button" @click="goback()">戻る</button>
         </div>
@@ -9,14 +10,16 @@
             <div v-for="column in columnList" v-bind:key="column.column_name">
                 <template v-if="column.column_name !== 'id' && column.column_name !== 'account_id' && column.column_name !== 'account_name'" >
                     <!-- <label v-bind:for="column.column_name">{{column.column_comment}}</label> -->
-                    <input type="text" v-if="column.input_type === 'text'" :list="column.column_name" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment">
+                    <input type="text" v-if="column.input_type === 'text'" :list="column.column_name" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment" :readonly="accountId != form['account_id']">
                     <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
                         <option v-for="category in categoryList[column.column_name]" v-bind:key="category.category_value" :value="category['category_value']"></option>
                     </datalist>
                     <p v-if="column.input_type === 'textarea'">
                         <label v-bind:for="column.column_name">{{column.column_comment}}</label>
                     </p>
-                    <textarea v-if="column.input_type === 'textarea'"  v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7"></textarea>
+                    <textarea v-if="column.input_type === 'textarea'"  v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7" :readonly="accountId != form['account_id']">
+
+                    </textarea>
                 </template>
             </div>
             <div class="modal-btn">
@@ -37,8 +40,10 @@ export default {
     name: 'editModal',
     data: function() {
         return {
+            accountId: '',
             tableName: '',
             editId: -1,
+            readonlyFlg: false,
             columnList: [],
             categoryList: [],
             form: {
@@ -121,9 +126,11 @@ export default {
         }
     },
     created: function() {
+        this.accountId = this.$route.accountId
         this.tableName = this.$route.query.tableName;
         this.editId = this.$route.query.editId;
         this.title = this.$route.query.title;
+        // this.readonlyFlg = this.$route.query.readonlyFlg;
         let params = new URLSearchParams();
         params.append('tableName', this.tableName);
         fetch(this.urlPrefix + '/getColumnList', {
@@ -149,7 +156,7 @@ export default {
 <style scoped>
 #top {
     /* max-width: 900px; */
-    margin: 20px auto;
+    margin: 20px 50px;
 }
 
 input,textarea {
