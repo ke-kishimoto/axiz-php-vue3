@@ -31,6 +31,7 @@ export default {
         return  {
             tableDefList: [],       
             tableList: [],
+            urlPrefix : 'http://localhost:8888/axiz-php',
         }
     },
     methods: {
@@ -38,7 +39,7 @@ export default {
             let params = new URLSearchParams();
             params.append('account_level', 3);
             params.append('type', 1); // マスタ
-            fetch('http://localhost:8888/axiz-php/getUseTableList', {
+            fetch(this.urlPrefix + '/getUseTableList', {
                 method: 'post',
                 body: params,
             })
@@ -63,6 +64,14 @@ ul.nav {
     padding: 0;
     width: 25%;
 }
+
+header {
+    display: flex;
+}
+header a {
+    margin: 10px;
+}
+
 main {
     /* width: 75%; */
 }

@@ -5,7 +5,9 @@
                 IT技術者養成サイト（講師）
             </h1>
             <div>
-                
+                <a href="./student" target="_blank">研修生ページ</a>
+                <a href="./admin" target="_blank">管理者用ページ</a>
+                <a href="./logout">ログアウト</a><br>
             </div>
             
         </header>
@@ -82,10 +84,26 @@ h1 {
 }
 ul.nav {
     list-style: none;
-    margin: 0;
+    margin-top: 30px;
     padding: 0;
     /* width: 25%; */
     width: 200px;
+}
+ul.nav li {
+    margin: 0;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #eee;
+    text-align: center;
+    line-height: 40px;
+}
+ul.nav li a {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    color: black;
 }
 main {
     /* width: 75%; */
@@ -94,5 +112,11 @@ main {
 .content {
     /* width: 100%; */
     display: flex;
+}
+header {
+    display: flex;
+}
+header a {
+    margin: 10px;
 }
 </style>

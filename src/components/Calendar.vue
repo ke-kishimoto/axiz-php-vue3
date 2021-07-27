@@ -41,12 +41,13 @@
                 <div>
                     <div v-for="(column, index) in columnList" v-bind:key="index" class="form-group">
                         <div v-if="column.column_name !== 'id' && column.column_name !== 'year' && column.column_name !== 'month' && column.column_name !== 'day' && column.column_name !== 'account_name'">
-                            <!-- <label v-bind:for="column.column_name">{{column.column_comment}}</label> -->
+                            <label v-bind:for="column.column_name">{{column.column_comment}}</label><br>
                             <input v-if="column.input_type === 'text'" :list="column.column_name" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" v-bind:placeholder="column.column_comment">
                             <datalist v-if="column.column_name.indexOf('category') >= 0" :id="column.column_name">
                                 <option v-for="(category, index) in categoryList[column.column_name]" v-bind:key="index" :value="category['category_value']"></option>
                             </datalist>
-                            <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="7" v-bind:placeholder="column.column_comment"></textarea>
+                            <textarea v-if="column.input_type === 'textarea'" class="form-control" v-model="form[column.column_name]" v-bind:maxlength="column.character_maximum_length" rows="10" v-bind:placeholder="column.column_comment"></textarea>
+                            <br>
                         </div>
                     </div>
                     <div >
@@ -392,5 +393,11 @@ tr td .cal-user-data {
 }
 tr td .cal-athoer-data {
     background-color: tomato;
+}
+
+.form-group .form-control {
+    margin: 10px;
+    width: 90%;
+    font-size: 16px;
 }
 </style>
